@@ -1,0 +1,1008 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}EV Game - Dashboard{% endblock %}
+
+{% block dashboard_active %}class="active"{% endblock %}
+
+{% block content %}
+<div class="col-xs-12" id="game-body">
+	
+	<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 left-sided-element" id="planning-view">
+		
+		<!-- Section Title -->
+		<div class="col-xs-12">
+			<div class="col-xs-3 col-sm-4" style="margin-top: 13px;">
+				<img class="img-responsive" src="{% static 'webapp/img/line-divider.gif' %}" alt="Line Divider" style="width: 150px; height: 5px;">
+			</div>
+			<div class="col-xs-6 col-sm-4" style="white-space: nowrap;">
+				<span class="header-text">Possible Tasks
+					<sup>
+						<a  class="helper-icon"
+							data-toggle="popover" 
+							data-placement="bottom"						
+							data-content="	<div class='helper'>
+												<p>This view presents all tasks that <b>might</b></p> 
+												<p>be available for you to perform, as well</p>
+												<p>as their actual probability of being</p>
+												<p>available and the reward you would</p>
+												<p>receive in each case.</p>
+												<br><p></p>
+												<p>You can use this view to decide on the</p>
+												<p>profit you want to aim for, the amount</p>
+												<p>of energy you need and, of course, your</p>
+												<p>bidding strategy.</p>
+											</div>">
+							<span class="fa fa-question-circle"></span>
+						</a>
+					</sup>
+				</span>
+			</div>
+			<div class="col-xs-3 col-sm-4" style="margin-top: 13px;">
+				<img class="img-responsive" src="{% static 'webapp/img/line-divider.gif' %}" alt="Line Divider" style="width: 150px; height: 5px;">
+			</div>
+		</div><!-- Section Title -->
+
+		<!-- Task Scenario Mode -->
+		<div class="visible-sm col-sm-2"></div>
+		<div id ="tasks_environment" class="col-xs-12 col-sm-8 col-md-12 col-lg-12 bordered-canvas"></div>
+		<div class="visible-sm col-sm-2"></div>
+
+		<!-- Scenerio Results -->
+		<div id="scenario_results" class="col-xs-12">
+			<div class="visible-sm col-sm-2"></div>
+			<div class="col-xs-4 col-sm-3 col-md-4 col-lg-4" style="color: blue;">
+				<div class="col-xs-12 centered"><span>Distance</span></div>
+				<div class="col-xs-12 centered"><span class="fa fa-road fa-3x"></span></div>
+				<div class="col-xs-12 centered scenario-info"><span id="scenario_distance">0</span><span> Km</span></div>
+			</div>
+
+			<div class="col-xs-4 col-sm-3 col-md-4 col-lg-4" style="color: orange;">
+				<div class="col-xs-12 centered"><span>Energy</span></div>
+				<div class="col-xs-12 centered"><span class="fa fa-bolt fa-3x"></span></div>
+				<div class="col-xs-12 centered scenario-info"><span id="scenario_energy">0</span><span> kWh</span></div>
+			</div>
+
+			<div class="col-xs-4 col-sm-3 col-md-4 col-lg-4" style="color: green;">
+				<div class="col-xs-12 centered"><span>Reward</span></div>
+				<div class="col-xs-12 centered"><span class="fa fa-money fa-3x"></span></div>
+				<div class="col-xs-12 centered scenario-info"><span>$ </span><span id="scenario_reward">0</span></div>
+			</div>
+			<div class="visible-sm col-sm-3"></div>
+		</div><!--Scenario Results End -->
+	</div>
+	
+
+	{% if user.energy_units == user.treatment.battery_capacity %}
+
+	<!-- Skip Bidding Panel -->
+	<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 pull-right" id="skip-bidding-panel">
+		
+		<!-- Section Title - Auction Room -->
+		<div class="col-xs-12">
+			<div class="col-xs-3 col-sm-4" style="margin-top: 13px;">
+				<img class="img-responsive" src="{% static 'webapp/img/line-divider.gif' %}" alt="Line Divider" style="width: 150px; height: 5px;">
+			</div>
+			<div class="col-xs-6 col-sm-4" style="white-space: nowrap;">
+				<span class="header-text">Auction Room</span>
+			</div>
+			<div class="col-xs-3 col-sm-4" style="margin-top: 13px;">
+				<img class="img-responsive" src="{% static 'webapp/img/line-divider.gif' %}" alt="Line Divider" style="width: 150px; height: 5px;">
+			</div>
+		</div><!-- Section Title - Auction Room -->
+
+		<div class="col-xs-12" style="margin-top: 25px;">
+			<div class="col-xs-12" style="font-size: 16px; text-align: left; display: block;">
+				<p>Your battery is full!</p> 
+				<p>There is no need to participate in an auction today.</p>
+			</div>
+		</div>
+
+		<div class="col-xs-12">
+			<a type="button" class="btn btn-primary pull-right go-plan-perform-tasks-directly" href="#">Plan and Perform Tasks >></a>
+		</div>
+	</div><!-- Skip Bidding Panel -->
+
+	{% else %}
+
+	<!-- Bidding Section -->
+	<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 pull-right" id="bidding-section">
+
+		<!-- Section Header -->
+		<div class="col-xs-12 row">
+			<div class="col-xs-3 col-sm-4" style="margin-top: 13px;">
+				<img class="img-responsive" src="{% static 'webapp/img/line-divider.gif' %}" alt="Line Divider" style="width: 150px; height: 5px;">
+			</div>
+			<div class="col-xs-6 col-sm-4" style="white-space: nowrap;">
+				<span class="header-text">Auction Room
+					<sup>
+						<a  class="helper-icon"
+							data-toggle="popover" 
+							data-placement="bottom"							
+							data-content="	<div class='helper'>
+												<p>Use this panel to participate in the</p>
+												<p>energy auction.</p>
+												<br><p></p>
+												<p>You can also skip the auction if you are</p>
+												<p>happy with your current charge.</p>
+									</div>">
+							<span class="fa fa-question-circle"></span>
+						</a>
+					</sup>
+				</span>
+			</div>
+			<div class="col-xs-3 col-sm-4" style="margin-top: 13px;"><img class="img-responsive" src="{% static 'webapp/img/line-divider.gif' %}" alt="Line Divider" style="width: 150px; height: 5px;"></div>
+		</div><!-- Section Header -->
+
+
+		<!-- Current Battery Levels -->
+		<div class="col-xs-12 row" style="margin-top: 25px">
+			<!-- Section Title -->
+			<div class="col-xs-12"><span class="fa fa-bar-chart-o fa-lg">&nbsp;&nbsp;&nbsp;Current Levels</span></div>
+
+			<!-- Current Battery Capacity Info -->
+			<div class="col-xs-12" style="margin-top: 10px;">
+				<div class="col-xs-6"><span><i>Battery Charge:</i></span></div>
+			</div>
+
+			<!-- Current Battery Capacity Slider -->
+			<div class="col-xs-12">
+				<div class="col-xs-6" id="current-charge-slider-parent">
+					<div id="current-charge-slider"></div>
+				</div>
+
+				<!-- KM Range Info -->
+				<div class="col-xs-4 pull-right centered" style="margin-top: 13px;">
+					<span><i>Range: <span id="current-range"></span> Km</i></span>
+				</div>
+			</div>		
+		</div><!-- Current Battery Levels Ends -->
+
+
+		{% if user.treatment.bidding_strategy == "uniform_bidding" %}
+
+			<!-- Uniform Bidding Panel -->
+			<!-- This type of bidding allows users to input the number of kWh they want to buy -->
+			<!-- as well as the max price they are willing to pay per kWh. -->
+			<!-- E.g.: I want n units at price x per unit -->
+			<div class="col-xs-12 row" style="margin-top: 30px;" id="uniform-bidding-panel">
+				<!-- Section Title -->
+				<div class="col-xs-12">
+					<span class="fa fa-magic fa-lg">&nbsp;&nbsp;&nbsp;Bid for additional kWh</span>
+					<sup>
+						<a  class="helper-icon"
+							data-toggle="popover" 
+							data-placement="bottom"							
+							data-content="	<div class='helper'>
+												<p>Place your bid using the slider below.</p>
+												<p>You might not win any extra energy,</p>
+												<p>if the bid is too low.</p>
+									</div>">
+							<span class="fa fa-question-circle"></span>
+						</a>
+					</sup>
+				</div>
+				
+				<!-- Bid Info -->
+				<div class="col-xs-12" style="margin-top: 10px;">
+					<div class="col-xs-8 pull-left"><span><i>kWh</i></span></div>
+					<div class="col-xs-4 pull-right" style="white-space: nowrap;"><span><i>Bid/Unit ($)</i></span></div>
+				</div>
+
+				<!-- Bid Slider and Input -->
+				<div class="col-xs-12">
+					<div class="col-xs-7" id="bid-qty-slider-parent"><div id="bid-qty-slider"></div></div>
+					<div class="col-xs-5 col-sm-4 pull-right" style="margin-top: 2px;">
+						<input type="number" id="bid-per-unit" min="0.01" step="0.01" placeholder="0.00" class="form-control bid-input"/>
+					</div>
+				</div>
+
+				<!-- Tentative Bid Results -->
+				<div class="col-xs-12" style="margin-top:20px; opacity: 0;" id="tentative-results">
+					<div class="col-xs-12"><span>Maximum Cost if Bid Fully Succeeds: <b>$ <span id="total-max-cost"></span></b></span></div>
+					<div class="col-xs-12"><span>Total Charge if Bid Fully Succeeds: <b><span id="total-kwh"></span> kWh</b></span></div>					
+					<div class="col-xs-12"><span>Potential Range: <b><span id="final-range"></span> Km</b></div>
+				</div>
+			</div><!-- Uniform Bidding Panel -->
+
+		{% elif user.treatment.bidding_strategy == "progressive_bidding" %}
+
+			<!-- Progressive Bidding Panel -->
+			<!-- This type of bidding allows users to input progressively the number of kWh they want to buy -->
+			<!-- as well as the max price they are willing to pay for each extra lot of units.  -->
+			<!-- E.g.: I want n units at price x per unit, for the next m units I am willing to pay y per unit, etc. -->
+			<div class="col-xs-12 row" style="margin-top: 30px;" id="progressive-bidding-panel">
+				<!-- Section Title -->
+				<div class="col-xs-12">
+					<span class="fa fa-magic fa-lg">&nbsp;&nbsp;&nbsp;Bid for additional kWh</span>
+					<sup>
+						<a  class="helper-icon"
+							data-toggle="popover" 
+							data-placement="bottom"							
+							data-content="	<div class='helper'>
+												<p>Place your bids using the sliders below.</p>
+												<p>You can add or remove bidding slots</p>
+												<p>as needed, but your bid always needs to</p>
+												<p>be at least as high as the previous bid.</p>
+												<br><p></p>
+												<p>Your bid will only succeed if any of the</p>
+												<p>amounts specified is fulfilled and you</p>
+												<p>will not be allocated anything less than</p>
+												<p>that.</p>
+												<br><p></p>
+												<p>Your previous day's bids (if any) will</p>
+												<p>be loaded by default for convenience.</p>
+									</div>">
+							<span class="fa fa-question-circle"></span>
+						</a>
+					</sup>
+				</div>
+				
+				<!-- Bid Info -->
+				<div class="col-xs-12" style="margin-top: 10px;">
+					<div class="col-xs-7 pull-left"><span><i>kWh</i></span></div>
+					<div class="col-xs-5 col-sm-4 col-md-3 col-lg-4"><span><i>Total Bid($)</i></span></div>
+				</div>
+
+				<!-- All Progressive Bid Inputs will be dynamically introduced here. -->
+				<!-- As a reference point, the "Add" button below will be used, the html code being added BEFORE the button. -->
+
+				<!-- "Add Another Bid" Button -->
+				<div class="col-xs-6" id="add-bid-section" style="margin-left: 15px;">
+					<button id="add-progressive-bid-btn" class="btn btn-sm btn-success">Add Another Bid <i class="fa fa-plus"></i></button>
+				</div>
+
+				<!-- "Clear All Bids Button" -->
+				<div class="col-xs-6" id="clear-bids-section" style="margin-left: -15px;">
+					<button id="clear-bids-btn" class="btn btn-danger btn-sm pull-right">Clear All Bids <i class="fa fa-ban"></i></button>
+				</div>
+
+				<div class="col-xs-12" style="margin-top: 5px;">
+					<span>* You will only win the exact quantity specified.</span>
+				</div>
+			</div><!-- Progressive Bidding Panel -->
+
+		{% elif user.treatment.bidding_strategy == "simple_bidding" %}
+
+			<!-- Simple Bidding Panel -->
+			<!-- This type of bidding allows users to select their bid type from 3 options: Low, Medium, High. --> 
+			<!-- The values corresponding to these options will staticly be available in the database. -->
+			<!-- E.g.: I want to bid High. -->
+			<div class="col-xs-12 row" style="margin-top: 30px;" id="simple-bidding-panel">
+				<!-- Section Title -->
+				<div class="col-xs-12" style="white-space: nowrap;">
+					<span class="fa fa-magic fa-lg">&nbsp;&nbsp;&nbsp;Bid for additional kWh</span>
+					<sup>
+						<a  class="helper-icon"
+							data-toggle="popover" 
+							data-placement="bottom"							
+							data-content="	<div class='helper'>
+												<p>Choose one of the three bidding options.</p>
+												<p>You might not win any extra energy,</p>
+												<p>if the bid is too low.</p>
+									</div>">
+							<span class="fa fa-question-circle"></span>
+						</a>
+					</sup>
+				</div>
+
+				<!-- Low, Medium, High Options -->
+				<div class="col-xs-12" style="margin-top: 15px;">
+					<div class="col-xs-12 col-sm-4">
+						<button class="btn btn-block simple-bid-choice-btn low-bid" id="low-bid-btn">Low<br/><span style="font-size: 14px;">$1.00 / kWh</span></button>
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<button class="btn btn-block simple-bid-choice-btn medium-bid" id="medium-bid-btn">Medium<br/><span style="font-size: 14px;">$2.00 / kWh</span></button>
+					</div>
+					<div class="col-xs-12 col-sm-4">
+					{% if request.user.treatment.treatment_name == "Simple_AAAI_3" %}
+						<button class="btn btn-block simple-bid-choice-btn high-bid" id="high-bid-btn">High<br/><span style="font-size: 14px;">$3.00 / kWh</span></button>
+					{% else %}
+					   <button class="btn btn-block simple-bid-choice-btn high-bid" id="high-bid-btn">High<br/><span style="font-size: 14px;">$4.00 / kWh</span></button>
+					{% endif %}
+					</div>
+				</div>
+			</div>
+
+		{% endif %}
+
+		<!-- Error Messages -->
+		<div class="col-xs-12 error-message" id="increasing-bids-error" style="opacity: 0; margin-top: 10px;">
+			<div class="alert alert-danger" role="alert">Bids must be formed of strictly increasing numbers!</div>
+		</div>
+
+		<!-- Run Auction Button -->
+		<div class="col-xs-12">
+			<button class="btn btn-primary btn-block disabled" id="run-auction-btn" >Run Auction</button>
+		</div>
+
+		<!-- Skip Auction Button -->
+		<div class="col-xs-12 col-sm-8 pull-right" style="font-size: 12px; text-align: right; display: block; margin-top: 10px;">
+			<a href="#" class="go-plan-perform-tasks-directly">I have enough battery charge. Skip auction.</a>
+		</div>
+	</div><!-- Bidding Section -->
+	{% endif %}
+</div>
+
+<!-- Auction Result Modal -->
+<div class="modal fade" id="auction-result-modal" tabindex="-1" role="dialog" aria-labelledby="modal-title" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="modal-title">Auction Results</h4>
+			</div>
+			<div class="modal-body" style="height: 200px;">
+				<div class="col-xs-12" id="auctionResults">
+					<table class="table table-responsive table-condensed borderless">
+						<tr>
+							<td>Allocated kWh:</td>
+							<td><span id="allocatedKwh" class="bolded"></span></td><!-- out of <span id="requestedKwh" class="bolded"></span> requested -->
+						</tr>
+						<tr>
+							<td>Money Spent:</td>
+							<td class="bolded">$ <span id="totalSpent"></span></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary close-modal-btn">Plan and Perform Tasks >></button>
+			</div>
+		</div>
+	</div>
+</div><!-- Auction Result Modal -->
+
+
+<!-- Tutorial Start Modal -->
+<div class="modal fade" id="tutorial-modal" tabindex="-1" role="dialog" aria-labelledby="modal-title" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="tutorial-modal-title">Welcome to the EV Charging Game</h4>
+			</div>
+			<div class="modal-body" style="height: 130px;">
+			
+				<div class="col-xs-10">
+					<p>You are the driver of an <b>electric delivery van</b> in the near future.</p>
+					<p>Your aim is to <b>maximise your profit</b> by completing delivery tasks.</p>
+					<p>However, electricity is scarce and your van's battery is charged through a daily auction.</p>
+				</div>
+				<div class="col-xs-2">
+					<span style="color:brown;" class="fa fa-truck fa-5x"></span>
+				</div>
+			</div>
+			
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success" id="start-tutorial-btn">Start Tutorial</button>
+				<button type="button" class="btn btn-default" id="skip-tutorial-btn">Skip Tutorial</button>
+			</div>
+		</div>
+	</div>
+</div><!-- Tutorial Start Modal -->
+
+
+<!-- Alert Auction Took Place -->
+<div id="dialog" class="hidden"  title="Auction Took Place">
+	<p>It seems you have already took part in an auction today (or decided to skip it).</p>
+	<p>You cannot participate in an auction more than once per day!</p>
+	<a href="/webapp/delivery" class="btn btn-primary pull-right">Proceed to Planning Tasks</a>
+</div>
+
+<input type="hidden" id="refreshed" value="no">
+<script type="text/javascript">
+onload=function(){
+var e=document.getElementById("refreshed");
+if(e.value=="no")e.value="yes";
+else{e.value="no";location.reload();}
+}
+</script>
+{% endblock %}
+
+{% block scripts %}{{ block.super }}
+<script src="{% static 'webapp/js/task_array.js' %}"></script>
+<script src="{%static 'webapp/js/tasks_environment.js' %}"></script>
+<script src="{%static 'webapp/js/progressive_bid_section.js' %}"></script>
+
+<script type="text/javascript">
+	
+	
+	$(document).ready(function(){
+		
+		{% if show_tutorial %}
+			$("#tutorial-modal").modal("show");		
+		{% endif %}
+		     
+	
+		var progressiveBids = [];
+		var bidSections = 0;
+		var valueOfLastProgressiveSlider = 0;
+		var submitted_bids = 0
+
+		draw_tasks_environment(	"tasks_environment", 			// container div ID
+								{{ tasks|safe }}, 				// tasks list
+								{{ task_probabilities|safe }},	// task probabilities list
+								{{ shortest_paths|safe }},		// shortest paths list
+								{{ kwh_per_km|safe }});		
+
+
+		$("#current-range").text(Math.round({{ user.energy_units }} / {{ kwh_per_km|safe }}));
+
+		$("#current-charge-slider").slider({
+			orientation: "horizontal",
+			range: "min",
+			min: 0,
+			max: {{ user.treatment.battery_capacity }},
+			value: {{ user.energy_units }},
+			animate: true,
+			slide: function(event, ui){ return false; }
+		});
+
+		var currentChargeText = {{ user.energy_units }} + "/" + {{ user.treatment.battery_capacity }};
+		var backgroundDiv = '<div><span class="current-charge-text">' + currentChargeText + '</span></div>';
+		$("#current-charge-slider .ui-slider-range").prepend(backgroundDiv);
+ 		
+
+
+		$("#bid-qty-slider").slider({
+			orientation: "horizontal",
+			range: "min",
+			min: 0, 
+			max: {{ user.treatment.battery_capacity}} - {{ user.energy_units }},
+			value: 0,
+			slide: function(event, ui){
+				$("#bid-qty-slider .ui-slider-handle").text(ui.value);
+				$("#total-kwh").text({{ user.energy_units }} + parseInt(ui.value));
+				$("#final-range").text(Math.round( ({{ user.energy_units }} + ui.value) / {{ kwh_per_km|safe }}));
+
+				if (ui.value > 0){
+					$("#tentative-results").css("opacity", 1);
+				 	
+				 	if ($("#bid-per-unit").val() > 0 && $("#run-auction-btn").hasClass("disabled")){
+						$("#run-auction-btn").removeClass("disabled");
+					}	
+				}
+				else if (ui.value == 0){
+					$("#tentative-results").css("opacity", 0);
+					if ( $("#run-auction-btn").hasClass("disabled")){
+						$("#run-auction-btn").addClass("disabled");
+					}
+				}
+				updateCost(ui.value);
+			}
+		});
+		$("#bid-qty-slider .ui-slider-handle").text($("#bid-qty-slider").slider("value"));
+		$("#total-kwh").text({{ user.energy_units }});
+		$("#final-range").text(Math.round({{ user.energy_units }} / {{ kwh_per_km|safe }}));
+
+		$("#bid-per-unit").on("keyup change click", function(){
+			if ($("#bid-per-unit").val() > 0 && $("#bid-qty-slider").slider("value") > 0 && $("#run-auction-btn").hasClass("disabled")){
+				$("#run-auction-btn").removeClass("disabled");
+			}
+			else if($("#bid-per-unit").val() == 0 && ! $("#run-auction-btn").hasClass("disabled")){
+				$("#run-auction-btn").addClass("disabled");
+			}
+			updateCost($("#bid-qty-slider").slider("value"));
+			
+		});
+
+
+		if ("{{ user.treatment.bidding_strategy }}" == "progressive_bidding"){
+			addProgressiveBidSection();
+			$("#progressive-bid-input-" + bidSections).fadeTo(500, 1);
+			$("#run-auction-btn").removeClass("disabled");
+		}
+
+
+
+		$("#add-progressive-bid-btn").click(function(){
+			$("#add-bid-section").fadeTo(50, 0, function(){
+				addProgressiveBidSection();
+				if ($("#game-body").height() <= $("#bidding-section").outerHeight()){
+					$("#game-body").height($("#bidding-section").outerHeight() + 50);
+				}
+				$("#progressive-bid-input-" + bidSections).fadeTo(500, 1)
+				$("#add-bid-section").fadeTo(500, 1);
+			});
+		});
+		
+		function updateCost(slider_value){
+			var rounded = ($("#bid-per-unit").val()*slider_value).toFixed(2);
+			$("#total-max-cost").text(rounded);
+		}
+		
+		updateCost($("#bid-qty-slider").slider("value"));
+
+		function addProgressiveBidSection(){
+			var id = ++bidSections;									// increase the number of bid sections
+			var progressiveBid = new progressiveBidSection(id);		// get new bid element
+			progressiveBids.push(progressiveBid);					// insert the bid in the array
+			
+			$("#add-bid-section").before(progressiveBid.html());	// add the section code before the "add" button
+
+			var sliderRef = "#" + progressiveBid.sliderId;					// new slider id ref (includes #)
+			var qtyDescriptionRef = "#" + progressiveBid.qtyDescriptionId;	// new qty description ref
+			var bidInputRef = "#" + progressiveBid.priceInputId;
+			var priceDescriptionRef = "#" + progressiveBid.priceDescriptionId;
+
+			// Add slider element (for bid quantity)
+			// Set its initial values on create - depending on the previous slider value
+			// Set the slide actions - setting the labels, handles, etc.
+			$(sliderRef).slider({
+				orientation: "horizontal",
+				range: "min",
+				min: 0, 
+				max: {{ user.treatment.battery_capacity}} - {{ user.energy_units }},
+				value: 1,
+				slide: function(event, ui){
+					// Prevent slider to go less than the current value of the previous sldier
+					if (progressiveBids.indexOf(progressiveBid) > 0){
+						// Get the previous slider ID
+						prevSliderId = progressiveBids[progressiveBids.indexOf(progressiveBid) - 1].sliderId;
+
+						// Do not allow sliding if the value is lower than the previous slider value
+						if (ui.value <= $("#" + prevSliderId).slider("value")) return false;
+					}
+
+					if (ui.value < 1){
+						return false;
+					}
+
+					// Browse through sliders below (higher id than current) and increase their values if lower
+					var dummyVal = ui.value;
+					for (var j = progressiveBids.indexOf(progressiveBid) + 1; j < progressiveBids.length; j++){
+						if ($("#" + progressiveBids[j].sliderId).slider("value") <= dummyVal ){
+							if (dummyVal + 1 > {{ user.treatment.battery_capacity }} - {{ user.energy_units }}){
+								return false;
+							}
+							else{
+								dummyVal++;
+							}
+						}
+					}
+
+					// Apply handle, description label (and other) values
+					applyValueToSlider(sliderRef, qtyDescriptionRef, ui.value);
+
+					for (var j = progressiveBids.indexOf(progressiveBid) + 1; j < progressiveBids.length; j++){
+						if ($("#" + progressiveBids[j].sliderId).slider("value") <= $("#" + progressiveBids[j - 1].sliderId).slider("value")){
+							applyValueToSlider("#" + progressiveBids[j].sliderId, "#" + progressiveBids[j].qtyDescriptionId, $("#" + progressiveBids[j - 1].sliderId).slider("value") + 1);
+						}
+					}
+
+					checkAddButtonStatus();
+					checkBidsAreCorrect();
+				},
+				create: function(event, ui){
+					// Get the value of the previous slider (or 0 if this is the first slider) and apply it
+					lastQtyVal = (progressiveBids.length > 1) 
+								 	? $("#" + progressiveBids[progressiveBids.length - 2].sliderId).slider("value") + 1 
+									: 1;
+					applyValueToSlider(sliderRef, qtyDescriptionRef, lastQtyVal);
+					checkAddButtonStatus();
+				}
+			});
+
+			// Get the last price input and apply its values to the new input and description
+			lastPriceVal = (progressiveBids.length > 1) ? $("#" + progressiveBids[progressiveBids.length - 2].priceInputId).val() : 0;
+			applyValueToInput(bidInputRef, priceDescriptionRef, lastPriceVal);
+
+			// Remove Button Action
+			$("#" + progressiveBid.removeBtnId).click(function(){
+				// Remove the HTML content associated with that section
+				$("#" + progressiveBid.sectionId).remove();
+
+				// Remove the progressive Bid from the array
+				progressiveBids.splice(progressiveBids.indexOf(progressiveBid), 1);
+				checkAddButtonStatus();
+				checkBidsAreCorrect();
+			});
+
+			// Price Input Actions 
+			$("#" + progressiveBid.priceInputId).on("keyup change click", function(){
+				if (! isNaN(parseFloat($(this).val()))){
+					$(priceDescriptionRef).text(parseFloat($(this).val()));
+				}
+				else {
+					$(priceDescriptionRef).text("0");
+				}
+				checkBidsAreCorrect();
+			});
+		}
+
+		function checkAddButtonStatus(){
+			if ($("#" + progressiveBids[progressiveBids.length - 1].sliderId).slider("value") < {{ user.treatment.battery_capacity}} - {{ user.energy_units }}){
+				$("#add-progressive-bid-btn").removeClass("disabled");
+				//console.log(progressiveBids)
+                //console.log($("#" + progressiveBids[progressiveBids.length - 1].sliderId).slider("value"))
+				//console.log("enabled");
+			}
+			else{
+				//console.log(progressiveBids)
+				//console.log($("#" + progressiveBids[progressiveBids.length - 1].sliderId).slider("value"))
+				$("#add-progressive-bid-btn").addClass("disabled");
+				//console.log("disabled");
+			}
+		}
+
+		function applyValueToSlider(sliderRef, sliderDescriptionRef, value){
+			$(sliderRef).slider("value", value);
+			$(sliderRef + " .ui-slider-handle").text(value);
+			$(sliderDescriptionRef).text(value);
+		}
+
+		function applyValueToInput(bidInputRef, priceDescriptionRef, value){
+			$(bidInputRef).val(value);
+			$(priceDescriptionRef).text(value);
+		}
+
+		function checkBidsAreCorrect(){
+			if (progressiveBids.length == 1){
+				$("#" + progressiveBids[0].priceInputId).removeClass("highlight-input-error");
+				$("#run-auction-btn").removeClass("disabled");
+				$("#increasing-bids-error").fadeTo(0, 0);
+			}
+			else{
+				var error_found = false;
+				for (var i = 0; i < progressiveBids.length - 1; i++){
+					for (var j = i + 1; j < progressiveBids.length; j++){
+
+						bidPrice1 = parseFloat($("#" + progressiveBids[i].priceInputId).val());
+						bidPrice2 = parseFloat($("#" + progressiveBids[j].priceInputId).val());
+
+						if (isNaN(bidPrice1)){
+							$("#" + progressiveBids[i].priceInputId).addClass("highlight-input-error");
+							$("#run-auction-btn").addClass("disabled");						
+							$("#increasing-bids-error").fadeTo(0, 1);
+							error_found = true;
+						}
+						else if (isNaN(bidPrice2)){
+							$("#" + progressiveBids[j].priceInputId).addClass("highlight-input-error");
+							$("#run-auction-btn").addClass("disabled");
+							$("#increasing-bids-error").fadeTo(0, 1);
+							error_found = true;						
+						}
+						else if (parseFloat(bidPrice1) > parseFloat(bidPrice2)){
+							$("#" + progressiveBids[j].priceInputId).addClass("highlight-input-error");
+							$("#run-auction-btn").addClass("disabled");
+							$("#increasing-bids-error").fadeTo(0, 1);
+							error_found = true;
+						}
+						else if(! error_found){
+							$("#" + progressiveBids[i].priceInputId).removeClass("highlight-input-error");
+							$("#" + progressiveBids[j].priceInputId).removeClass("highlight-input-error");
+							$("#run-auction-btn").removeClass("disabled");
+							$("#increasing-bids-error").fadeTo(0, 0);
+						}
+					}
+				}
+			}
+		}
+
+		$("#run-auction-btn").click(function(e){
+			$.ajax({
+				type: "GET",
+				url: "/webapp/checkIfAuctionTookPlaceToday",
+				success: function(auctionTookPlace){
+					if (auctionTookPlace == "False"){
+						
+						// Progressive Bidding Case
+						if ("{{ user.treatment.bidding_strategy }}" == "progressive_bidding"){
+							var kwhs = [];
+							var bids = [];
+							var sliders = progressiveBids.length;
+
+							for (var i = 0; i < progressiveBids.length; i++){
+								kwhs.push(parseInt($("#" + progressiveBids[i].sliderId).slider("value")));
+								bids.push(parseFloat($("#" + progressiveBids[i].priceInputId).val()));
+							}
+
+							// Seb: Changed this, as we allow unlimited balance:
+							//var ok = true;
+							//for (var i = 0; i < bids.length && ok; i++){
+							//	if (bids[i] > {{ user.balance }}){
+							//		alert ("Your bid exceeds your available balance.");
+							//		ok = false;
+							//	}
+							//}
+
+							//if (ok){
+								$.ajax({
+									type: "POST", 
+									url: "/webapp/run_progressive_auction/",
+									data: {"kwhs": kwhs, "bids": bids, "sliders": sliders},
+									success: function(auctionResult){
+										$("#auction-result-modal").modal("show");
+										loadAuctionResults(auctionResult);
+									}
+								});
+							//}	
+						}
+						
+						// Uniform Bidding Case
+						else if ("{{ user.treatment.bidding_strategy }}" == "uniform_bidding"){
+							var kwh = $("#bid-qty-slider").slider("value")
+							var bid = $("#bid-per-unit").val()
+							//var ok = true;
+
+							//if ((bid * kwh) > {{ user.balance }}){
+							//	alert ("Your bid exceeds your available balance.");
+							//	ok = false;
+							//}
+
+							//if (ok){
+								$.ajax({
+									type: "POST",
+									url: "/webapp/run_uniform_auction/",
+									data: {"max_kwh": kwh, "bid_per_unit": bid},
+									success: function(auctionResult){
+										$("#auction-result-modal").modal("show");
+										loadAuctionResults(auctionResult);
+									}
+								});
+							//}
+						}
+
+						// Simple Bidding Case
+						else if ("{{ user.treatment.bidding_strategy }}" == "simple_bidding"){
+							
+							var bidType = "low";
+							
+							if ($("#medium-bid-btn").hasClass("bid-choice-selected")){
+								bidType = "medium";
+							}
+							else if ($("#high-bid-btn").hasClass("bid-choice-selected")){
+								bidType = "high";
+							}
+
+							$.ajax({
+								type: "POST",
+								url: "/webapp/run_simple_auction/",
+								data: {"bidType": bidType},
+								success: function(auctionResult){
+									console.log(auctionResult);
+									$("#auction-result-modal").modal("show");
+									loadAuctionResults(auctionResult);
+								}
+							});
+						}
+					}
+					else{
+						window.location.href = "/webapp/home/";
+					}
+				}
+			});
+		});
+
+		function loadAuctionResults(auctionResult){
+			$("#allocatedKwh").text(auctionResult.allocatedKwh);
+			$("#requestedKwh").text(auctionResult.requestedKwh);
+			$("#totalSpent").text(auctionResult.totalSpent.toFixed(2));
+		}
+
+		function updateUserDetails(){
+			$.ajax({
+				type: "GET",
+				url: "/webapp/updateUserModel",
+				success: function(user){
+					console.log(user.balance)
+					$(".userBalance").text(user.balance);
+					$(".userKwh").text(user.energyUnits + " kWh");
+					$(".userDay").text("Day " + user.currentDay);
+				}
+			});
+		}
+
+		$(".go-plan-perform-tasks-directly").click(function(){
+			$.ajax({
+				type: "GET",
+				url: "/webapp/skip_auction",
+				success: function(){
+					window.location.href = "/webapp/delivery";
+				}
+			})
+		});
+
+		$("#enter-auction-btn").hover(
+			function(){
+				$("#auction-cover-img").animate({
+					opacity: 1.0
+				}, 10); 
+			}, function(){
+				$("#auction-cover-img").animate({
+					opacity: 0.2
+				}, 10);
+			}
+		);
+
+		$("#bid-form").submit(function(event){
+			event.preventDefault();
+			submitted_bids += 1;
+			qty = $("#input_qty").val();
+			bid = $("#input_bid").val();
+
+			$("#no-bids").addClass("hidden");
+
+			$("#no-bids").before("<tr><th>Bid #" + submitted_bids + "</th><td>" + qty + " kWh at " + bid + " /kWh</td></tr>");
+			$("#bid-form").trigger("reset");
+		});
+
+		$("#auction-result-battery-slider").slider({
+			orientation: "vertical",
+			range: "min",
+			min: 0,
+			max: {{ user.treatment.battery_capacity }},
+			value: {{ user.energy_units }},
+			slide: function(event, ui){ return false; }
+		});
+
+		var battery_percentage = parseFloat({{ user.energy_units }} * 100 / {{ user.treatment.battery_capacity }}).toFixed(2);
+		var infoback = "<div>" + battery_percentage + "%</div>";
+		$("#auction-result-battery-slider-parent .ui-slider-range").prepend(infoback);
+
+
+		$(".close-modal-btn").click(function(){
+			window.location.href = "/webapp/delivery/";
+		});
+
+		// Center the auction cover vertically center
+		$("#auction-cover").css("margin-top", $("#game-body").height() / 3);
+
+		$("#low-bid-btn").click(function(e){
+			$("#run-auction-btn").removeClass("disabled");
+			$(this).addClass("bid-choice-selected");
+			$("#medium-bid-btn").removeClass("bid-choice-selected");
+			$("#high-bid-btn").removeClass("bid-choice-selected");
+		});
+
+		$("#medium-bid-btn").click(function(e){
+			$("#run-auction-btn").removeClass("disabled");
+			$(this).addClass("bid-choice-selected");
+			$("#low-bid-btn").removeClass("bid-choice-selected");
+			$("#high-bid-btn").removeClass("bid-choice-selected");
+		});
+
+		$("#high-bid-btn").click(function(e){
+			$("#run-auction-btn").removeClass("disabled");
+			$(this).addClass("bid-choice-selected");
+			$("#medium-bid-btn").removeClass("bid-choice-selected");
+			$("#low-bid-btn").removeClass("bid-choice-selected");
+		});
+
+		if ( "{{ user.treatment.bidding_strategy }}" == "progressive_bidding"){
+			applyPreviousProgressiveBid();
+		}
+		
+		function applyPreviousProgressiveBid(){
+			var last_kwhs = {{ last_progressive_kwhs }};
+			var last_bids = {{ last_progressive_bids }};
+			
+			if (last_kwhs.length > 0 && last_bids.length > 0){
+				for (var i = 0; i < last_kwhs.length; i++){
+					if (i > 0) addProgressiveBidSection();
+
+					// Apply the last bid - or the maximum possible bid if the last bid is greater than the maximum possible
+					if ( last_kwhs[i] <= {{ user.treatment.battery_capacity }} - {{ user.energy_units }}){
+						applyValueToSlider("#" + progressiveBids[i].sliderId, "#" + progressiveBids[i].qtyDescriptionId, last_kwhs[i]);
+						applyValueToInput("#" + progressiveBids[i].priceInputId, "#" + progressiveBids[i].priceDescriptionId, last_bids[i]);
+					}
+					else if (i > 0) {
+						// Remove the slider section(html)
+						$("#" + progressiveBids[i].sectionId).remove();
+						
+						// Remove the progressive Bid from the array
+						progressiveBids.splice(i, 1);
+						checkBidsAreCorrect();
+						checkAddButtonStatus();
+						//console.log(progressiveBids);
+						return;
+					}
+				}
+			}
+			
+			
+		}
+
+		$("#clear-bids-btn").click(function(){
+			var i = progressiveBids.length - 1;
+			while (i >= 0){
+				// Remove the HTML content associated with that section
+				$("#" + progressiveBids[i].sectionId).remove();
+
+				// Remove the progressive Bid from the array
+				progressiveBids.splice(i, 1);
+				checkBidsAreCorrect();
+
+				console.log(progressiveBids.length);
+				i = i - 1;
+			}
+			addProgressiveBidSection();
+			$(window).trigger('resize');
+		});
+
+	});
+	
+	$("#start-tutorial-btn").click(function(e){
+		$("#tutorial-modal").modal("hide");
+		startTutorial();
+	});
+	
+	$("#skip-tutorial-btn").click(function(e){
+		$("#tutorial-modal").modal("hide");
+	});
+	
+	$(".close-modal-btn").click(function(){
+			window.location.href = "/webapp/delivery/";
+	});
+	
+		function moveTutorialToPlanningView() {
+		  	$("#game-control-panel").removeClass("glowing-border");
+		  	$("#game-control-panel").popover("hide");
+		  	
+		  	$("#planning-view").addClass("glowing-border");
+			$("#planning-view").popover({
+		     	placement:"right",
+		     	trigger:"manual",
+             	html:true,
+             	title:"Task Planning",
+		     	content:"<p>Here you can see what delivery tasks might come up today.</p>"
+		     	+ "<p>Tasks are shown as bubbles. They have a value (in $) and a probability for coming up.</p>"
+		     	+ "<p>Click on the tasks to find out how much electricity you need to complete them.</p>"
+		       	+ '<button type="button" class="btn btn-success" id="advance" onclick="moveTutorialToAuctionView();">Ok, got it</button>'
+		       	+ '<button type="button" class="btn btn-default pull-right" id="skip" onclick="endTutorial();">Skip tutorial</button>'
+		     });
+			
+		
+		 	$("#planning-view").popover("show");
+		}
+		
+		function moveTutorialToAuctionView() {
+		  	$("#planning-view").removeClass("glowing-border");
+		  	$("#planning-view").popover("hide");
+		  	
+		  	$("#bidding-section").addClass("glowing-border");
+			$("#bidding-section").popover({
+		     	placement:"left",
+		     	trigger:"manual",
+             	html:true,
+             	title:"Auction View",
+		     	content:"<p>To charge your van you need to participate in an auction for electricity.</p>"
+		     	+ "<p>Bid the <b>maximum</b> you would be willing to pay. You will typically pay less.</p>"
+		       	+ '<button type="button" class="btn btn-success" id="advance" onclick="endTutorial();">Ok, let&#39;s play</button>'
+		     });
+			
+		
+		 	$("#bidding-section").popover("show");
+		}
+		
+		function endTutorial() {
+			$("#game-control-panel").removeClass("glowing-border");
+			$("#planning-view").removeClass("glowing-border");
+			$("#bidding-section").removeClass("glowing-border");
+			
+			$("#game-control-panel").popover("hide");
+			$("#planning-view").popover("hide");
+			$("#bidding-section").popover("hide");
+		}
+		
+
+		function startTutorial() {
+			$("#game-control-panel").addClass("glowing-border");
+			$("#game-control-panel").popover({
+		     	placement:"bottom",
+		     	trigger:"manual",
+		     	animate:true,
+             	html:true,
+             	title:"Control Panel",
+		     	content: "<p>Here you can see your battery charge and your balance.</p>"
+		     	+ '<button type="button" class="btn btn-success" id="advance" onclick="moveTutorialToPlanningView();">Ok, got it</button>'
+		       	+ '<button type="button" class="btn btn-default pull-right" id="skip" onclick="endTutorial();">Skip tutorial</button>'
+		       	+ '<br/>'
+		     });
+			
+		
+		 	$("#game-control-panel").popover("show");
+		}
+	
+</script>
+{% endblock %}

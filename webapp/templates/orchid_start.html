@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}EV Game{% endblock %}
+
+{% block control_panel %}{% endblock %}
+
+{% block content %}
+
+<br/>
+
+<div class="row">
+<div class="col-sm-3"></div>
+<div class="col-sm-6 text-center login" id="game-body">
+	
+		
+	<div class="row">
+		<div class="col-sm-3"></div>
+		<div class="col-sm-6">
+	                    <img src="/static/webapp/img/orchid_logo.png" class="img-responsive">
+	    </div>
+	    <div class="col-sm-3"></div>
+		 </div>
+	 
+	 
+	 <div class="row">
+	 <div class="col-sm-12">
+	<h2>EV Charging Game</h2>
+	
+	<h5>Take on the role of an electric van driver and <b>maximise</b> your profit.</h5>
+	</br>
+</div>
+	</div>
+	
+	
+	<div class="col-sm-2"></div>
+	<div class="col-sm-8">
+	<a href="/webapp/orchidNewPlayer" class="btn btn-large btn-primary btn-block">New Player</a>
+	</div>
+	<div class="col-sm-2"></div>
+	<br/>
+	<br/>	
+	<div class="col-sm-2"></div>
+	<div class="col-sm-8">
+	<a href="/webapp/orchidExistingPlayer" class="btn btn-large btn-primary btn-block">Existing Player</a>
+	</div>
+	<div class="col-sm-2"></div>
+	</br></br></br></br>
+</div>
+<div class="col-sm-3"></div>
+
+
+
+</div>
+{% endblock %}
+
+
+{% block footer %}{% endblock %}
+

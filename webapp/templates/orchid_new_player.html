@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}EV Game{% endblock %}
+
+{% block control_panel %}{% endblock %}
+
+{% block content %}
+
+<br/>
+
+<div class="row">
+<div class="col-sm-3"></div>
+<div class="col-sm-6 text-center login" id="game-body">
+	
+		
+	<div class="row">
+		<div class="col-sm-3"></div>
+		<div class="col-sm-6">
+	                    <img src="/static/webapp/img/orchid_logo.png" class="img-responsive">
+	    </div>
+	    <div class="col-sm-3"></div>
+		 </div>
+	 
+	 
+	 <div class="row">
+	 <div class="col-sm-12">
+	 
+	
+	
+	{% if error_message %}
+        <div class="alert alert-danger" role="alert" style="margin-top: 10px; margin-bottom: 0px;">{{ error_message }}</div>
+    {% endif %}
+
+        <form class="form-horizontal" role="form" method="POST" action="/webapp/orchidNewPlayer/" style="padding: 15px;">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            
+            <div class="row">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-10">
+            <div class="form-group" >
+                <!--<label for="username">Name:</label>-->
+                <input id="username" class="form-control" name="username" placeholder="Enter Your Full Name" type="text" required /> {{ form.login.errors }}
+            </div>
+            </div>
+            <div class="col-sm-1"></div>
+            </div>
+            
+            <div class="row">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-11">
+            
+            <div class="form-group pull-left small-margin">
+                <input id="id_leaderboard" name="leaderboard" type="checkbox" checked />
+                <label for="id_leaderboard"><div class="smallprint">Include my name on the leaderboard for a chance to win a &pound;50 gift voucher.</div></label>
+            </div>
+            </div>
+            </div>
+            
+            <div class="row">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-11">
+            
+            <div class="form-group pull-left">
+                <input id="id_research" name="research" type="checkbox" checked />
+                <label for="id_research"><div class="smallprint">Anonymised data from this game can be used to help ORCHID research on EVs.</div></label>
+            </div>
+            </div>
+            </div>
+
+			<div class="row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-6">
+            <button class="btn btn-large btn-primary btn-block" type="submit">Start Game</button>
+            <a href="/orchid"  class="btn btn-large btn-default btn-block">Back To Menu</a>
+        	</div>
+        	<div class="col-sm-3"></div>
+        </div>
+        </form>
+	</div>
+	
+
+
+</div>
+{% endblock %}
+
+
+{% block footer %}{% endblock %}
+

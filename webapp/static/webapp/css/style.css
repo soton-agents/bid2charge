@@ -1,0 +1,754 @@
+html,
+body{
+  height: 100%;
+  background-color: #eee;
+}
+
+/* Wrapper for page content to push down footer */
+#wrap{
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  background-color: #eee;
+  /* Negative indent footer by its height */
+  margin: 0 auto -60px; 
+}
+
+#push, 
+#footer{
+  height: 60px;
+}
+
+#footer{
+  background-color: black;
+  opacity: 0.5;
+}
+
+.navbar{
+  margin-bottom: 5px;
+}
+
+.fb{    
+  background: url('/static/img/fb_200.png') no-repeat center top;
+  box-shadow: 2px 2px 8px rgba(0,0,0,.7);
+  border-radius: 5px;
+  width: 198px;
+  height: 37px;
+  margin: 80px auto;
+  overflow: hidden;
+}
+
+.grayed{
+  color: gray;
+}
+
+.battery-dot{
+  position: absolute; 
+  right: -11px;
+  text-align:right; 
+  font-size: 25px;
+  color: #bbb !important;
+  margin-top: 10px;
+}
+
+.helper{
+  font-family: TimesNewRoman, "Times New Roman", Times, Baskerville, Georgia, serif;
+  font-size: 16px;
+  font-weight: normal;
+  white-space: nowrap;
+  height: auto;
+  width: auto;
+}
+
+.helper p{
+  margin-top: 20px;
+}
+
+.helper p:first-child{
+  margin-top: 5px;
+}
+
+.helper-icon :hover{
+  cursor: pointer;
+}
+
+.tab-content{
+  moz-border-radius: 0px 0px 5px 5px;
+  webkit-border-radius: 0px 0px 5px 5px;
+  border-radius: 0px 0px 5px 5px;
+  display: inline-block;
+  padding: 10px;
+}
+
+.nav-tabs{
+  margin-bottom: 0px;
+}
+
+.centered{
+  text-align: center;
+  display: block;
+  float: none;
+  margin: 0 auto;
+  white-space: nowrap;
+}
+
+.btn-navbar-right{
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+#game-control-panel{
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-top: 10px;
+  padding-bottom: 5px;
+  border: 1px solid #C2C2C2;
+}
+
+.bolded{
+  font-weight: bold;
+}
+
+#user-details-table{
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+#user-details-table td{
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+#user-details-table th{
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+.control-panel-logo{
+  height: 90px;
+  width: 200px;
+  margin-top: 5px;
+  margin-left: -20px;
+}
+
+.control-panel-icon{
+  width: 50px;
+  height: 50px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.task-info-icon{
+  max-width: 40px;
+  /*margin-top: 5px;*/
+  margin-bottom: 10px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.control-panel-info{
+  font-family: TimesNewRoman, "Times New Roman", Times, Baskerville, Georgia, serif;
+  font-weight: bold;
+  font-size: 18px;
+  display: block;
+  text-align: center;
+}
+
+.header-text{
+  font-family: TimesNewRoman, "Times New Roman", Times, Baskerville, Georgia, serif;
+  font-weight: bold;
+  font-color: #2618A3;
+  font-size: 20px;
+  display: block;
+  text-align: center;
+}
+
+.well-title{
+  font-family: TimesNewRoman, "Times New Roman", Times, Baskerville, Georgia, serif;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 15px;
+}
+
+#auction-cover-img{
+  -webkit-transition: opacity 0.3s;
+  -moz-transition: opacity 0.3s;
+  transition: opacity 0.3s;
+  opacity: 0.2;
+}
+
+#auction-cover-img:hover{
+  -webkit-transition: opacity 0.3s;
+  -moz-transition: opacity 0.3s;
+  transition: opacity 0.3s;
+  opacity: 1.0 !important;
+  cursor: pointer;
+}
+
+.big-label{
+  font-family: TimesNewRoman, "Times New Roman", Times, Baskerville, Georgia, serif;
+  font-weight: bold;
+  font-color: #221B61;
+  font-size: 20px;
+  display: block;
+  text-align: center;
+}
+
+.scenario-info{
+  font-size: 20px;
+  background: none;  
+  border: 0;
+  -moz-border-radius: 20px 20px 20px 20px;
+  -webkit-border-radius: 20px 20px 20px 20px;
+  border-radius: 20px 20px 20px 20px;
+}
+
+.low{
+  color: blue;
+}
+
+.medium{
+  color: orange;
+}
+
+.high{
+  color: red
+}
+
+.buttons-box{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.button-in-box{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  min-width: 100px;
+}
+
+
+#game-body{
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-top: 20px;
+  background: white;
+  border-left: 1px solid #C2C2C2;
+  border-right: 1px solid #C2C2C2;
+  border-bottom: 2px solid #C2C2C2;
+  -moz-border-radius: 0px 0px 10px 10px;
+  -webkit-border-radius: 5px 5px 10px 10px;
+  border-radius: 5px 5px 10px 10px;
+  padding-bottom: 10px;
+  height: auto;
+}
+
+.auction-details-well{
+  margin-top: 25px;
+  max-height: 80px;
+}
+
+.auction-details-content{
+  margin-top: -10px;
+}
+
+.auction-outcome-well{
+  margin-left: 15px;
+  max-height: 80px;
+}
+
+.auction-outcome-content{
+  margin-top: -10px;
+}
+
+#tasks_environment{
+  margin-top: 25px;
+}
+
+#task_perform_env{
+  margin-top: 25px;
+}
+
+#auction-ticket{
+  margin-top: 24px;
+  background: #B7F772;
+  -moz-border-radius: 0px 0px 10px 10px;
+  -webkit-border-radius: 5px 5px 10px 10px;
+  border-radius: 5px 5px 10px 10px;
+}
+
+@media screen and (min-width: 992px){
+  .left-sided-element{
+    margin-left: -20px;
+  }
+}
+
+
+
+@media screen and (max-width: 991px){
+  #tasks_environment{
+    margin-left: -30px;
+  }
+
+  #task_perform_env{
+    margin-left: -30px;
+  }
+
+  #bidding-section{
+    margin-top: 25px;
+  }
+
+  #task-planning-section{
+    margin-top: 25px;
+  }
+}
+
+.bid-price-input{
+  height: 25px !important;
+  line-height: 14px !important;
+  font-size: 14px !important;
+  padding: 2px 2px 2px 2px !important;
+}
+
+.highlight-input-error{
+  border: 3px solid red !important;
+}
+
+.bid-input-label-row{
+  margin-left: 0px;
+}
+
+.task_env{
+  transition: fill .3s ease;
+  fill: #00C2ED;
+  stroke-width: 2;
+}
+
+.hovered_task_env{
+  stroke: #786370;
+  fill: #00C2ED;
+}
+
+.borderless td, th, tr {
+    border: none !important;
+}
+
+.border-top{
+  border-top: 1px solid !important;
+}
+
+.border-bottom{
+  border-bottom: 1px solid !important;
+}
+
+.task_background{
+  opacity: 0;
+}
+
+.task{
+  /*background-color: #FFFFFF;*/
+  fill: white;
+  stroke: #786370;
+  stroke-width: 2;
+}
+
+.task:hover{
+  stroke: #786370;
+  transition: fill .5s ease;
+  fill: #D2F00E;
+  cursor: pointer;
+}
+
+.reward-label{
+  fill: blue;
+  font-family: TimesNewRoman, "Times New Roman", Times, Baskerville, Georgia, serif;
+  font-weight: bold;
+}
+
+.reward-label:hover{
+  cursor: pointer;
+}
+
+.bid-label{
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 3px;
+}
+
+.bid-description{
+  margin-top: 4px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: right;
+  display: block;
+}
+
+.bid-description .bid-description-value{
+  font-weight: bold;
+}
+
+.remove-bid-btn{
+  background: transparent;
+  color: #84b4dc;
+  border: 0;
+}
+
+.remove-bid-btn:hover{
+  background: transparent;
+  color: #84b4dc;
+  border: 0;
+  text-shadow: 0px 1px 2px orange;
+}
+
+#remove-bid-btn-1{
+  display: none;
+}
+
+.simple-bid-choice-btn{
+  height: 70px;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+}
+
+.bid-choice-selected{
+  border: 5px solid black;
+  padding: 2px 2px 2px 2px;
+}
+
+.low-bid{
+  background-color: #428bca;
+  color: #ddd;
+}
+
+.low-bid:hover{
+  color: white;
+}
+
+.low-bid:active{
+  color: white;
+}
+
+.low-bid:not(:hover){
+  color:#ddd;
+}
+
+.medium-bid{
+  background-color: orange;
+  color: black;
+}
+
+.medium-bid:hover{
+  color: #66000C;
+
+}
+
+.medium-bid:active{
+  color: #66000C;
+}
+
+.medium-bid:not(:hover){
+  color: black;
+}
+
+.high-bid{
+  background-color: red;
+  color: #ddd;
+}
+
+.high-bid:hover{
+  color: white;
+}
+
+.high-bid:active{
+  color: white;
+}
+
+.high-bid:not(:hover){
+  color: #ddd;
+}
+
+.error-message{
+  color: red;
+  font-weight: bold;
+}
+
+
+/*************************************/
+/* Control Bar Battery Status Slider */
+#battery-slider-parent .ui-slider{
+  height: 56px !important;
+  max-width: 120px !important;
+}
+
+#battery-slider-parent .ui-slider-handle{
+  display: none;
+}
+
+.battery-slider-text{
+  text-align: center;
+  margin-left: 5px;
+  margin-top: 18px;
+  color: black;
+  font-weight: bold;
+  font-size: 13px;
+  text-shadow: 0px 3px 2px #fff;
+}
+/* Control Bar Battery Status Slider */
+/*************************************/
+
+
+/**********************************/
+/* Bidding - Current Charge Slider */
+#current-charge-slider-parent .ui-slider{
+    height: 30px !important;
+}
+
+#current-charge-slider-parent .ui-slider-handle{
+  display: none;
+}
+
+#current-charge-slider-parent .ui-slider-range-min{
+  background: orange !important;
+}
+
+.current-charge-text{
+  text-align: center;
+  margin-left: 5px;
+  margin-top: 8px;
+  color: black;
+  font-weight: bold;
+  font-size: 12px;
+  text-shadow: 0px 2px 2px #fff;
+}
+/* Bidding - Current Charge Slider */
+/**********************************/
+
+
+
+/* Bid Slider */
+#bid-qty-slider-parent .ui-slider {
+  height: 30px !important;
+}
+
+#bid-qty-slider-parent .ui-slider-range-min{
+  background: red !important;
+}
+
+#bid-qty-slider-parent .ui-slider-handle{
+  height: 36px !important;
+  width: 22px !important;
+  cursor: pointer !important;
+  margin-top: 1px;
+  text-align: center;
+  padding-top: 6px;
+}
+
+
+
+
+
+/* Bid Slider */
+.progressive-bid-qty-slider-parent .ui-slider {
+  height: 30px !important;
+}
+
+.progressive-bid-qty-slider-parent .ui-slider-range-min{
+  background: red !important;
+}
+
+.progressive-bid-qty-slider-parent .ui-slider-handle{
+  height: 36px !important;
+  width: 22px !important;
+  cursor: pointer !important;
+  margin-top: 1px;
+  text-align: center;
+  padding-top: 6px;
+}
+
+
+
+
+
+
+#auction-result-battery-slider-parent .ui-slider{
+  height: 65px !important;
+  width: 50px !important;
+}
+
+#auction-result-battery-slider-parent .ui-slider-handle{
+  display: none;
+}
+
+#auction-result-battery-slider-parent .ui-slider-range{
+  font-family: TimesNewRoman, "Times New Roman", Times, Baskerville, Georgia, serif;
+  font-size: 12px;
+  color: black;
+  text-align: center;
+  bottom: 0;
+}
+
+.sliderBackColor{
+  height: 100%;
+  float: left;
+  background-color: orange;
+}
+
+.transparent{
+  opacity: 0.0;
+}
+
+#taskSet-options tbody tr:hover{
+  cursor: pointer;
+}
+
+.option-radio:hover{
+  cursor: pointer;
+}
+
+.formContainer{
+  background-color: #FFFFFF;
+  padding: 20px 20px 20px 20px;
+  -moz-border-radius: 5px 5px 5px 5px;
+  -webkit-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+}
+
+.first-instructions-section{
+  margin-top: 20px;
+  font-size: 16px;
+  text-align: justify;
+}
+
+.instructions-section{
+  margin-top: 50px;
+  font-size: 16px;
+  text-align: justify;
+}
+
+.instructions-section-image{
+  display: block;
+  text-align: center;
+}
+
+.instructions-section-text{
+}
+
+.instructions-section-title-left{
+  text-align: left;
+}
+
+.instructions-section-title-right{
+  text-align: right;
+}
+
+#leaderboard-table{
+  white-space: nowrap;
+}
+
+.current-user{
+  font-weight: bold;
+  color: blue;
+}
+
+.radio-inline {
+  padding-right: 10px;
+}
+
+.statement {
+  padding-top: 30px;
+  padding-bottom: 0px;
+  font-weight: bold;
+}
+
+
+@media screen and (max-width: 767px){
+  .helper{
+    font-family: TimesNewRoman, "Times New Roman", Times, Baskerville, Georgia, serif;
+    font-size: 12px;
+    font-weight: normal;
+    white-space: nowrap;
+    height: auto;
+    width: auto;
+  }
+
+  .control-panel-status{
+    margin-left: -25px;
+  }
+
+  #battery-slider-parent{
+    width: 80px;
+  }
+
+  #battery-status-info{
+    left: 15px;
+  }
+
+  .instructions-section-title-left{
+    text-align: left;
+  }
+
+  .instructions-section-title-right{
+    text-align: left;
+  }
+
+
+}
+
+div.smallprint{
+    font-size: 12px;
+    font-weight: normal;
+    font-style:italic;
+}
+
+.form-group.small-margin{
+  margin-top:10px;
+  margin-bottom:0px;
+}
+
+.glowing-border {
+	z-index: 1;
+	
+    border: 1px solid #FF6600; 
+
+    /* round the corners */
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
+
+
+    /* make it glow! */
+    -webkit-box-shadow: 0px 0px 15px #FF6600;
+       -moz-box-shadow: 0px 0px 15px #FF6600;
+            box-shadow: 0px 0px 15px #FF6600; /* some variation of blue for the shadow */
+
+}
+
+.popover {
+    background: #FFFF99;
+}
+
+.popover.bottom .arrow:after {
+    border-bottom-color: #FFFF99;
+}
+
+.popover.left .arrow:after {
+    border-left-color: #FFFF99;
+}
+
+
+.popover.right .arrow:after {
+    border-right-color: #FFFF99;
+}
+
+
+.popover-title {
+	background: #FFFF66;
+}
+

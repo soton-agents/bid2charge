@@ -1,0 +1,59 @@
+{% extends "basic.html" %}
+
+{% load staticfiles %} 
+
+{% block about_active %}class="active"{% endblock %} 
+
+{% block content %}
+
+<div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
+	<div class="formContainer">
+		<h3 style="text-align: center;">About</h3>
+
+		<br />
+
+{% if hell_freezes_over %}
+
+	<p style="margin-top: 20px;">We're researchers at the University of
+		Southampton, working on applying techniques from artificial
+		intelligence and computational economics to problems faced in the
+		Smart Grid.</p>
+		
+	<p>
+		Our team is made up of 
+		<a href="http://users.ecs.soton.ac.uk/ss2/">Sebastian Stein</a>,
+		<a href="http://users.ecs.soton.ac.uk/eg/">Enrico Gerding</a>,
+		Adrian Nedea and <a href="http://homedir.jct.ac.il/~rosenfa/">Avi Rosenfeld</a>.
+		We are supported by an Annual Adventures in Research 
+		Grant from the University of Southampton, as well as the
+		<a href="http://www.orchid.ac.uk">Orchid project</a>.
+	</p>
+
+		<p>
+			If you wish to find out more about Bid2Charge or the research behind
+			it, you can <a href="mailto:ss2@ecs.soton.ac.uk">mail us</a>, read an
+			overview of the research on the 
+			<a href="http://www.economist.com/blogs/babbage/2011/09/recharging-electric-cars">Economist blog</a>,
+			or have a look at <a href="http://www.ecs.soton.ac.uk/people/ss2/publications">our publications</a>, for example <a href="http://eprints.soton.ac.uk/356347/">this AIJ paper</a>.
+		</p>
+
+{% else %}
+
+	<p>
+	We're researchers working on applying techniques from artificial
+		intelligence and computational economics to problems faced in the
+		Smart Grid.
+	</p>
+	
+	<p>
+	  This page will soon contain more information.
+	</p>
+	
+
+{% endif %}		
+
+	</div>
+
+</div>
+
+{% endblock %}

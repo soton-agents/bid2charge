@@ -1,0 +1,144 @@
+{% load url from future %}
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="google-site-verification" content="wn04CHjPJdSeRtUxJ9QU67SRQtChbPdJzesObap5Wmk" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta property="og:title" content="Play electric vehicle game to help research" />
+    <meta property="og:site_name" content="Bid2Charge"/>
+    <meta property="og:description" content="Bid for electricity, then make money by completing deliveries with your electric delivery van. How much profit can you make? Compare your score to other players on the leaderboard!" />
+    <meta property="fb:app_id" content="637440493014641" />
+    <meta property="og:image" content="/static/subscribe/img/wind_mills_car_wide.jpg" />
+
+    
+    <title>{% block head_title %}{% endblock %}</title>
+    
+    {% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/jquery-ui.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'webapp/css/style.css' %}">
+    {% endblock %}
+</head>
+<body>
+    <div id="container">
+
+        {% block navbar %}
+        <nav class="navbar navbar-inverse navbar-static-top" id="navigation-bar" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/about">EV Charging Game</a>
+
+                    <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                        <span class="sr-only">Toggle Navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+
+
+                <div id="navbarCollapse" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <!-- <li {% block about_active %}{% endblock %}><a href="/about">About</a></li>  -->
+                        <li {% block subscribe_active %}{% endblock %}><a href="/subscribe">Subscribe</a></li>
+                        <li {% block login_active %}{% endblock %} ><a href="/accounts/login/">Login</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        {% endblock %}
+
+        <div class="container" id="content">
+            {% block content %}{% endblock %}
+        </div>
+
+        {% block footer %}{% endblock %}
+    </div>
+
+    {% block scripts %}
+    <script src="{% static 'js/jquery-2.1.1.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+    {% endblock %}
+</body>
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	   
+    $("[data-toggle=popover]").popover({
+        trigger: "click",
+        html: true
+    });
+    
+    
+    setBackgroundDim();
+
+    $(window).resize(function(){
+        setBackgroundDim();
+    });
+
+    function setBackgroundDim(){
+        win_height = $(window).height();
+        body_height = $("body").height();
+
+        if (win_height >= body_height) 
+            str = "auto " + win_height + "px";
+        else 
+            str = $(window).width() + "px auto";
+
+        $("body").css("background-size", str);
+    }
+ });
+
+$(document).ajaxSend(function(event, xhr, settings) {
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    function sameOrigin(url) {
+        // url could be relative or scheme relative or absolute
+        var host = document.location.host; // host + port
+        var protocol = document.location.protocol;
+        var sr_origin = '//' + host;
+        var origin = protocol + sr_origin;
+        // Allow absolute or scheme relative URLs to same origin
+        return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+            (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+            // or any other URL that isn't scheme relative or absolute i.e relative.
+            !(/^(\/\/|http:|https:).*/.test(url));
+    }
+    function safeMethod(method) {
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+    }
+});
+</script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-5650123-5', 'auto');
+  ga('send', 'pageview');
+</script>
+</html>

@@ -1,0 +1,83 @@
+{% extends "account/base.html" %}
+{% load staticfiles %}
+{% load url from future %}
+{% load account %}
+
+{% block head_title %}Sign Up{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <!-- Direct Signup -->
+    <div class="well col-xs-12 col-sm-12 col-md-6 col-lg-6 pull-left" style="margin-top: 20px;">
+        <h3 class="centered">Sign Up</h3>
+
+        <form class="form-horizontal" role="form" method="POST" action="{% url 'account_signup' %}">
+            {% csrf_token %}
+            
+            <div class="form-group" >
+                <label for="id_email">Email:</label>
+                <input id="id_email" class="form-control" name="email" placeholder="Email" type="email" required /> {{ form.email.errors }}
+            </div>
+
+            <div class="form-group" >
+                <label for="id_username">Username:</label>
+                <input id="id_username" class="form-control" name="username" placeholder="Username" type="text" required /> {{ form.username.errors }}
+            </div>
+            
+            <div class="form-group">
+                <label for="id_password1">Password:</label>
+                <input id="id_password1" class="form-control" name="password1" placeholder="Password" type="password" required /> {{ form.password.errors }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_password2">Repeat Password:</label>
+                <input id="id_password2" class="form-control" name="password2" placeholder="Repeat Password" type="password" required /> {{ form.password.errors }}            {{ form.non_field_errors }}
+
+            </div>
+
+            <div class="form-group">
+                <input id="id_remember" name="remember" type="checkbox" />
+                <label for="id_remember">Remember Me</label>
+            </div>
+
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
+
+            <div>
+                <span>By singing up, you agree to <a  class="helper-icon"
+                            data-toggle="popover" 
+                            data-placement="top"                     
+                            data-content="  <div class='helper'>
+                                                <p>This website uses session cookies <br/>
+                                                to store the state of the game, and <br/>
+                                                we record your interactions with the <br/>
+                                                game to help our research.<br/>
+                                                </p>
+                                            </div>">
+                        Terms and Conditions</a>.</span>
+            </div>
+
+            <button class="btn btn-default btn-primary btn-block" type="submit" style="margin-top: 10px;">Sign Up</button>
+        </form>
+
+        <div class="footnote">
+            <br>
+            <p>Already have an account? Please <a href="{{ login_url }}">Sign In</a>.</p>
+        </div>
+    </div><!-- Direct Signup -->
+
+	<!-- Facebook Signup -->
+	<div class="well col-xs-12 col-sm-12 col-md-5 col-lg-5 pull-right" style="margin-top: 20px;">
+		<!-- {% csrf_token %} -->
+        <h3 class="centered">Social Login</h3>
+		<a href="/accounts/facebook/login/" class="social-login centered" style="margin-top: 20px;">
+            <img src="{% static "webapp/img/fb_200.png" %}">
+        </a>
+		{% include "socialaccount/snippets/login_extra.html" %}
+	</div>
+</div>    
+{% endblock %}
+
+

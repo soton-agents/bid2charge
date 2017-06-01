@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% load extra_filters %}
+
+{% block title %}EV Game - Reset{% endblock %}
+
+{% block content %}
+<div class="col-xs-12" id="game-body">
+	<p><b>Well done</b> - you have completed game {{ game }}.</p>
+	<p style="margin-top: 20px;">Your battery will now be reset. You have {{ games_left }} game{{ games_left|pluralize }} left to complete this HIT.</p>
+	<p style="margin-top: 20px;">Your total accumulated virtual profit so far is <b>${{ total_profit|format_money }}</b> (corresponding to a HIT bonus of <b>${{ bonus_so_far|format_money }}</b>).</p>
+	<p style="margin-top: 20px;">Click the <b>Continue</b> button to proceed to the next game.</p>
+	
+	<button class="btn btn-default btn-primary" style="margin-top: 20px;" type="submit" id="continue-btn">Continue</button>
+</div> 
+{% endblock %}
+
+{% block scripts %}{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#continue-btn").click(function(){
+		window.location.href = "/webapp/home/";
+	});
+});
+</script>
+{% endblock %}

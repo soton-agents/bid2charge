@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}EV Game - Settings{% endblock %}
+
+{% block content %}
+
+<div class="col-xs-12" id="game-body">
+
+	<div class="hidden-xs hidden-sm col-md-2 col-lg-3"></div>
+
+	<div class="col-xs-12 col-sm-12 col-md-8 col-lg-6">
+		{% if saved_ok %}
+			<span>
+				<i class="fa fa-check-square" style="color:green;"></i>
+				 Settings saved successfully!
+			</span>
+		{% endif %}
+
+		<form class="form form-horizontal" action="/webapp/updateSettings/" method="POST">
+			{% csrf_token %}
+			<label>Username:</label><br>
+			<input type="text" value="{{ user.username }}" class="form-control" name="username" required></input>
+			<input type="checkbox" name="agreeToEmails" {% if user.agree_to_receive_email %} checked {% endif %} style="margin-top: 30px;"> I agree to receive emails from EV Guru admins.</input> 
+			<button class="btn btn-primary btn-default btn-block" type="submit" style="margin-top: 30px;">Save</button>
+		</form>
+	</div>
+
+	<div class="hidden-xs hidden-sm col-md-2 col-lg-3"></div>
+
+</div>
+
+{% endblock %}

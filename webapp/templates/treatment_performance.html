@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}EV Game - Interface Performance{% endblock %}
+
+{% block stylesheets %}{{ block.super }}
+<link rel="stylesheet" href="{% static 'webapp/css/morris.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="col-xs-12" id="game-body" style="padding-bottom: 50px;">
+	
+	<!-- Charts -->
+	<div class="col-xs-12">
+
+		<!-- Performance Chart -->
+		<div class="col-xs-12" style="margin-top: 20px;">
+
+			<!-- Chart Title -->
+			<div class="col-xs-12"><h4>Performance Chart</h4></div>
+
+			<!-- Morris Line Chart -->
+			<div class="hidden" id="performance-chart" style="height: 250px;"></div>
+			
+			<!-- Empty Chart Alert -->
+			<div class="col-xs-12 alert alert-info hidden" role="alert" id="no-performance-chart-alert">
+				There are no performance records available.
+			</div>
+		</div><!-- Performance Chart -->
+
+		<!-- Auction Chart -->
+		<div class="col-xs-12" style="margin-top: 50px;">
+
+			<!-- Chart Title -->
+			<div class="col-xs-12"><h4>Auction Chart</h4></div>
+
+			<!-- Morris Line Chart -->
+			<!-- <div style=""> -->
+			<div class="hidden" id="auction-history-chart" style="height: 250px;"></div>
+			
+			<!-- Empty Chart Alert -->
+			<div class="col-xs-12 alert alert-info hidden" role="alert" id="no-auction-history-chart-alert">
+				There are no records available.
+			</div>
+		</div><!-- Auction Chart -->
+
+	</div><!-- Charts -->
+</div>
+
+{% endblock %}
+
+{% block scripts %}{{ block.super }}
+<script src="{% static 'webapp/js/raphael.min.js' %}"></script>
+<script src="{% static 'webapp/js/morris.min.js' %}"></script>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+
+		drawPerformanceChart();
+		drawAuctionChart();
+
+		$(window).resize(function(){
+			$("#performance-chart").empty();
+			drawPerformanceChart();
+
+			$("#auction-history-chart").empty();
+			drawAuctionChart();
+		});
+
+		function drawPerformanceChart(){
+			performanceData = '[ [{"day" : "1", "balance" : 30.1 } , {"day" : "2", "balance" : 32.2 }], [{"day" : "1", "balance" : 32.1 } , {"day" : "2", "balance" : 34.2 }]]';
+
+			//{% for day in dayHistory %}
+			//	performanceData += '{ "day": "{{ day.day }}", "balance": {{ day.balance }} },';
+			//{% endfor %}
+
+		//	if (performanceData[performanceData.length - 1] == ","){
+			//	performanceData = performanceData.substring(0, performanceData.length - 1) + "]";
+				$("#performance-chart").removeClass("hidden");
+			//}
+			//else{
+		//		performanceData += "]";
+		//		$("#no-performance-chart-alert").removeClass("hidden");
+		//	}
+
+			new Morris.Line({
+				element: "performance-chart",
+				data: $.parseJSON(performanceData),
+				xkey: "day",
+				ykeys: ["balance", ],
+				labels: ["Simple", "Uniform"],
+				ymax: "auto", 
+				ymin: "auto",
+				parseTime: false,
+				xLabelAngle: 45,
+				hideHover: true,
+				xLabelFormat: function(x){ return "Day " + x.src.day; },
+				yLabelFormat: function(y){ return y.toFixed(2) + "$"}
+			});
+		}
+
+		function drawAuctionChart(){
+			auctionData = "["
+
+			{% for auction in auctionHistory %}
+				bid_pay_diff = {{ auction.bid }} - {{ auction.total_spent }};
+				auctionData += '{ "day": "{{ auction.day }}", "total_spent": {{ auction.total_spent }}, "kwh_won": {{ auction.kwh_won }}, "bid_pay_diff":' + bid_pay_diff + ' },';
+			{% endfor %}
+
+			if (auctionData[auctionData.length - 1] == ","){
+				auctionData = auctionData.substring(0, auctionData.length - 1) + "]"
+				$("#auction-history-chart").removeClass("hidden");
+			}
+			else{
+				auctionData += "]";
+				$("#no-auction-history-chart-alert").removeClass("hidden");
+			}
+
+			new Morris.Bar({
+				element: "auction-history-chart",
+				data: $.parseJSON(auctionData),
+				xkey: "day",
+				ykeys: ["total_spent", "bid_pay_diff", ],
+				labels: ["Paid", "Bid", ],
+				ymax: "auto", 
+				ymin: "auto",
+				parseTime: false,
+				xLabelAngle: 20,
+				hideHover: true,
+				stacked: true,
+				xLabelFormat: function(x){ return "Day " + x.src.day + ":\n" + x.src.kwh_won + " kWh"; },
+				yLabelFormat: function(y){ return y.toFixed(2) + "$" },
+				hoverCallback: function(index, options, content, data){
+					var i = content.indexOf("Bid:");
+					var j = content.indexOf("$", i);
+					return content.substring(0, i + 5) + (data.total_spent + data.bid_pay_diff).toFixed(2) + content.substring(j);
+				}
+			});
+		}
+	});
+</script>
+{% endblock %}

@@ -1,0 +1,67 @@
+html, body{
+  margin: 0;
+  height: 100%;
+  padding: 0;
+}
+
+body{
+  background-color: #222222;
+  background-image: url("../img/wind_mills_car_wide.jpg");
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
+#navigaton-bar{}
+
+#container{
+  min-height: 100%;
+  position: relative;
+}
+
+#content{
+  margin-top: 50px;
+  padding-bottom: 20px;
+}
+
+#footer{
+  position: absolute;
+  left: 2px;
+  bottom: 0;
+  width: 100%;
+  height: 20px;
+  background: transparent;
+  color: #428bc4;
+}
+
+.navbar{
+  margin-bottom: 5px;
+}
+
+.formContainer{
+  height: auto;
+  background-color: #FFFFFF;
+  opacity: 0.9;
+  padding: 20px 20px 20px 20px;
+  -moz-border-radius: 5px 5px 5px 5px;
+  -webkit-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+  box-sizing: border-box;
+}
+
+.form-layout {
+	box-sizing: border-box;
+	
+}
+
+.form-intro{
+  text-align: justify;
+  font-size: 15px;
+}
+
+.catchy-line{
+  font-style: italic;
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+  margin-top: 15px;
+}

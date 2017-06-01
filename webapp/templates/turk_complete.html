@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% load extra_filters %}
+
+{% block title %}EV Game - Instructions{% endblock %}
+
+{% block instructions_active %}class="active"{% endblock %}
+
+{% block control_panel %}{% endblock %}
+
+{% block content %}
+
+
+
+
+    <!-- left section with fa icons -->
+    <div class="col-xs-12 first-instructions-section">
+        <h2 class="col-xs-12 instructions-section-title-left">Thank You!</h2>
+
+        <table class="col-xs-12">
+            <tr>
+                <td
+                    class="col-xs-12 col-sm-9 col-md-9 col-lg-9 instructions-section-text">
+                    <p>
+                        Thanks for your help. Your HIT is now complete.
+                    </p>
+                    <p>
+                        Please enter the following code on the Mechanical Turk website to claim your payment of ${{ total_payment|format_money }}: 
+                        <b>{{ request.user.username }}</b>
+                    </p>
+                    
+                    <p>
+                      We will endeavour to pay you within 24 hours.
+                    </p>
+                    <p>
+                        If you have any queries, please do not hesitate to contact us at
+                    {% if request.user.is_aamas %}
+                       <b>(Removed for anonymity)</b>. 
+                    {% else %}
+                       <a href="mailto:ss2@ecs.soton.ac.uk">ss2@ecs.soton.ac.uk</a>.
+                    {% endif %} 
+                    
+                    </p>
+                </td>
+                <td
+                    class="hidden-xs col-sm-3 col-md-3 col-lg-3 instructions-section-image">
+                    <span style="color: brown;" class="fa fa-plug fa-5x"></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+{% endblock %}
+
+{% block footer %}
+<div id="footer">
+	<div class="container">
+		<div class="col-xs-12" style="margin-top: 20px;">
+			<div class="col-xs-6">
+				<a href="#" target="blank">&copy; EV Game</a>
+			</div>
+			{% if request.user.is_turker == False %}
+			<div class="col-xs-6" style="text-align: right;">
+				<a href="#">Leave Feedback</a>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block scripts %}{{ block.super }}
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		{% if anchor %}
+		  $('html,body').animate({scrollTop: $("#{{ anchor }}").offset().top},1);
+		{% endif  %}
+	});
+</script>
+
+{% endblock %}
+
+

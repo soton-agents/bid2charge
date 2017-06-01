@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% load extra_filters %}
+
+{% block title %}EV Game - Reset{% endblock %}
+
+{% block content %}
+<div class="col-xs-12" id="game-body">
+	<p><b>Well done</b> - you have completed game {{ game }}.</p>
+	{% if new_best %}
+	<p style="margin-top: 20px;">You have achieved a new personal best profit of <b>${{ new_best|format_money }}</b>.</p>
+	{% else %}
+	<p style="margin-top: 20px;">You achieved a profit of ${{ profit|format_money }} in this game. Your personal best remains ${{ old_best|format_money }}.</p>
+	{% endif %}
+	
+	<p style="margin-top: 20px;">You can keep playing to improve your score.</p>
+	
+	<button class="btn btn-default btn-primary" style="margin-top: 20px;" type="submit" id="continue-btn">Play Again</button>
+</div> 
+{% endblock %}
+
+{% block scripts %}{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#continue-btn").click(function(){
+		window.location.href = "/webapp/home/";
+	});
+});
+</script>
+{% endblock %}

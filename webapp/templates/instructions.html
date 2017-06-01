@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}EV Game - Instructions{% endblock %}
+
+{% block instructions_active %}class="active"{% endblock %}
+
+{% block control_panel %}{% endblock %}
+
+{% block content %}
+<!-- left section with fa icons -->
+<div class="col-xs-12 first-instructions-section">
+	<h3 class="col-xs-12 instructions-section-title-left">What is the story behind EV Game?</h3>
+
+	<table class="col-xs-12">
+		<tr>
+			<td class="col-xs-12 col-sm-9 col-md-9 col-lg-9 instructions-section-text">
+				<p>You work for a delivery company. You drive an electric vehicle 
+					around town, aiming to maximize your profit by completing certain deliveries. Each
+					delivery gives you a reward, but you also need to charge your car with the
+					energy you estimate you might need for reaching the destination.</p>
+			</td>
+			<td class="hidden-xs col-sm-3 col-md-3 col-lg-3 instructions-section-image">
+				<span style="color:brown;" class="fa fa-truck fa-5x"></span>
+			</td
+		</tr>
+	</table>
+</div>
+
+<!-- Right section with images -->
+<div class="col-xs-12 instructions-section">
+	<h3 class="col-xs-12 instructions-section-title-right">How do I see all tasks that might be available?</h3>
+
+	<table class="col-xs-12">
+		<tr>
+			<td class="hidden-xs col-sm-3 col-md-3 col-lg-3">
+				<div class="col-sm-5 col-md-4 col-lg-4">
+					<img class="img-responsive" src="{% static 'webapp/img/medium-reward-task-icon.png' %}" alt="Task Image">
+				</div>
+				<div class="col-sm-7 col-md-5 col-lg-5">
+					<img class="img-responsive" src="{% static 'webapp/img/high-reward-task-icon.png' %}" alt="Task Image">
+				</div>
+				<div class="hidden-sm col-md-3 col-lg-3">
+					<img class="img-responsive" src="{% static 'webapp/img/low-reward-task-icon.png' %}" alt="Task Image">
+				</div>
+			</td>
+			<td class="col-xs-12 col-sm-9 col-md-9 col-lg-9 instructions-section-text">
+				<p>The "Possible Tasks" view shows all the possible tasks that <em>might</em> come up later.
+					Each task has associated the probability of actually occuring as well as its reward. </p>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<!-- Left section -->
+<div class="col-xs-12 instructions-section">
+	<h3 class="col-xs-12 instructions-section-title-left">How can I buy energy?</h3>
+
+	<table class="col-xs-12">
+		<tr>
+			<td class="col-xs-12 col-sm-9 col-md-9 col-lg-9 instructions-section-text">
+				<p>Each day, you can participate in an auction which gives you the chance to buy
+					the energy you need. Winning is not a sure thing though, therefore you need 
+					to carefully place your bids and decide on the correct amounts and prices.</p>
+			</td>
+			<td class="hidden-xs col-sm-3 col-md-3 col-lg-3 instructions-section-image">
+				<span style="color:orange;" class="fa fa-bolt fa-5x"></span>
+			</td
+		</tr>
+	</table>
+</div>
+
+<!-- Right section -->
+<div class="col-xs-12 instructions-section">
+	<h3 class="col-xs-12 instructions-section-title-right">What happens after I finish the auction?</h3>
+
+	<table class="col-xs-12">
+		<tr>
+			<td class="hidden-xs col-sm-3 col-md-3 col-lg-3 instructions-section-image">
+				<span style="color:blue;" class="fa fa-tachometer fa-5x"></span>
+			</td>
+			<td class="col-xs-12 col-sm-9 col-md-9 col-lg-9 instructions-section-text">
+				<p>Once you leave the auction room, you will be able to see the tasks that have actually come up on that day.
+					You will be presented with a number of task sets which can you perform, these being your optimal choices 
+					for the day. You might not be able to perform all tasks that are available, or even none at all, if you 
+					do not have the required energy to cover their total distance. Once you perform these tasks and get your 
+					reward, you will advance to the next day.</p>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<!-- Left section -->
+<div class="col-xs-12 instructions-section">
+	<h3 class="col-xs-12 instructions-section-title-left">When does the game finish?</h3>
+
+	<table class="col-xs-12">
+		<tr>
+			<td class="col-xs-12 col-sm-9 col-md-9 col-lg-9 instructions-section-text">
+				<p>The game finishes after day {{ user.treatment.numberOfDays }}. If you want to keep playing, you can become an awesome EV Guru and you will 
+					be able to play the game for many days ahead!</p>	
+			</td>
+			<td class="hidden-xs col-sm-3 col-md-3 col-lg-3 instructions-section-image">
+				<div class="col-xs-12">
+					<img class="img-responsive" src="{% static 'webapp/img/evguru.png' %}" alt="EV Guru Icon">
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+
+
+{% endblock %}
+
+{% block footer %}
+<div id="footer">
+	<div class="container">
+		<div class="col-xs-12" style="margin-top: 20px;">
+			<div class="col-xs-6">
+				<a href="#" target="blank">&copy; EV Game</a>
+			</div>
+			<div class="col-xs-6" style="text-align: right;">
+				<!-- <a href="#">Leave Feedback</a>  -->
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,63 @@
+{% extends "account/base.html" %}
+ 
+{% load staticfiles %}  
+{% load account %}
+
+{% block login_active %}class="active"{% endblock %}
+
+{% block head_title %}Sign In{% endblock %}
+
+{% block content %}
+  
+    <!-- Direct Login -->
+    <div class="well col-xs-12 col-sm-12 col-md-6 col-lg-6 pull-left" style="margin-top: 20px;">
+        <h3 class="centered">Sign In</h3>
+
+        {% if request.session.login_error %}
+        <div class="alert alert-danger" role="alert" style="margin-top: 10px; margin-bottom: 0px;">Invalid Credentials</div>
+        {% endif %}
+
+        <form class="form-horizontal" role="form" method="POST" action="/webapp/do_login/" style="padding: 15px;">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            
+            <div class="form-group" >
+                <label for="login-username">Username:</label>
+                <input id="login-username" class="form-control" name="username" placeholder="Username" type="text" required /> {{ form.login.errors }}
+            </div>
+            
+            <div class="form-group">
+                <label for="login-password">Password:</label>
+                <input id="login-password" class="form-control" name="password" placeholder="Password" type="password" required /> {{ form.password.errors }}
+            </div>
+
+            <div class="form-group">
+                <input id="id_remember" name="remember" type="checkbox" />
+                <label for="id_remember">Remember Me</label>
+            </div>
+
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
+
+            <button class="btn btn-default btn-primary btn-block" type="submit">Sign In</button>
+        </form>
+
+        <div class="footnote">
+            <br>
+            <p><a class="forgot" href="{% url 'account_reset_password' %}">Forgot Password?</a></p>
+            <p>Don't have an account? <a href="{% url 'account_signup' %}">Sign Up!</a></p>
+        </div>
+    </div><!-- Direct Login -->
+        
+    <!-- Facebook Login -->
+    <div class="well col-xs-12 col-sm-12 col-md-5 col-lg-5 pull-right" style="margin-top: 20px;">
+        <h3 class="centered">Social Login</h3> 
+        <a href="/accounts/facebook/login/" class="social-login centered" style="margin-top: 20px;">
+            <img src="{% static "webapp/img/fb_200.png" %}">
+        </a>
+        {% include "socialaccount/snippets/login_extra.html" %}
+    </div><!-- Facebook Login -->
+
+{% endblock %}
+

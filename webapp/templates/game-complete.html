@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}EV Game - Complete{% endblock %}
+
+{% block dashboard_active %}class="active"{% endblock %}
+
+{% block content %}
+<div class="col-sm-12" id="game-body">
+	<h3>Congratulations!</h3>
+
+	<h5>You have now completed your first month in the EV Charging Game!</h5>
+
+	<p>You can become an EV Guru and keep playing to become the best charger!</p>
+
+	<p>From this point, your balance will be reset every <b>{{ user.treatment.numberOfDays }}</b> days. If you manage to obtain a higher score at the end of the month, then that will be your new best monthly score.</p>
+
+	<p>The best monthly scores are used for the leaderboard rankings!</p>
+
+	<a href="/webapp/becomeEvGuru" class="btn btn-default btn-primary pull-right">Become an EV Guru</a>
+</div>
+{% endblock %}
+
+
+{% block footer %}{% endblock %}
+

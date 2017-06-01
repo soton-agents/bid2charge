@@ -1,0 +1,383 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% load extra_filters %}
+
+{% block title %}EV Game - Instructions{% endblock %}
+
+{% block instructions_active %}class="active"{% endblock %}
+
+{% block control_panel %}{% endblock %}
+
+{% block content %}
+
+
+<form class="form-horizontal" role="form" method="POST" action="#">
+
+	{% csrf_token %}
+
+	<!-- left section with fa icons -->
+	<div class="col-xs-12 first-instructions-section">
+		<h2 class="col-xs-12 instructions-section-title-left">Final Survey</h2>
+
+		<table class="col-xs-12">
+			<tr>
+				<td
+					class="col-xs-12 col-sm-9 col-md-9 col-lg-9 instructions-section-text">
+					{% if request.user.is_turker_trial_2 == True %}
+					<p>
+					   Well done! You completed all games.
+					</p>
+					{% else %}
+					<p>
+					   Well done! You completed the game and with a total virtual balance of ${{ request.user.balance|format_money }}.
+					</p>
+					{% endif %}
+					
+					{% if profit > 0 %}
+					<p>
+					   In total you made a virtual profit of ${{ profit|format_money }} and you will
+					   receive a bonus payment of ${{ bonus_payment|format_money }} for this HIT.
+					   </p>
+					{% endif %}
+					
+					<p>
+					  Your total payment for this HIT will be <b>${{ total_payment|format_money }}</b>.
+					</p>
+					<p>
+					To claim your payment, please answer the following questions, hit "Submit" and paste your unique code into the MTurk HIT (we will show this to you again on the next screen).
+					</p>
+					
+				</td>
+				<td
+					class="hidden-xs col-sm-3 col-md-3 col-lg-3 instructions-section-image">
+				</td>
+			</tr>
+		</table>
+	</div>
+
+
+	
+
+	<div class="col-xs-12 instructions-section">
+		<h2 class="col-xs-12 instructions-section-title-left">Questions</h2>
+		<table class="col-xs-12">
+
+			<tr>
+				<td class="col-xs-9 instructions-section-text">
+
+					<h4>Please select your gender</h4>
+
+					<div class="radio">
+						<label> <input type="radio" name="genderRadio"
+							id="genderRadio1" value="Male" {% if genderRadio == "Male" %} checked {% endif %}> Male </label>
+					</div>
+					<div class="radio">
+						<label> <input type="radio" name="genderRadio"
+							id="genderRadio2" value="Female" {% if genderRadio == "Female" %}checked{% endif %}> Female</label>
+					</div>
+					
+				</td>
+			</tr>
+		</table>
+		</div>
+		
+		
+		
+	<div class="col-xs-12 instructions-section">
+		<table class="col-xs-12">
+
+			<tr>
+				<td class="col-xs-6">
+					<h4>What is your age range?</h4>
+
+					<div class="radio">
+						<label> <input type="radio" name="ageRadio" id="ageRadio1"
+							value="18-24" {% if ageRadio == "18-24" %}checked{% endif %}>18-24
+						</label>
+					</div>
+					<div class="radio">
+						<label> <input type="radio" name="ageRadio" id="ageRadio2"
+							value="25-34" {% if ageRadio == "25-34" %}checked{% endif %}>25-34
+						</label>
+					</div>
+					<div class="radio">
+						<label> <input type="radio" name="ageRadio" id="ageRadio3"
+							value="35-44" {% if ageRadio == "35-44" %}checked{% endif %}>35-44
+						</label>
+					</div>
+					<div class="radio">
+						<label> <input type="radio" name="ageRadio" id="ageRadio4"
+							value="45-54" {% if ageRadio == "45-54" %}checked{% endif %}>45-54
+						</label>
+					</div>
+					<div class="radio">
+						<label> <input type="radio" name="ageRadio" id="ageRadio5"
+							value="55-64" {% if ageRadio == "55-64" %}checked{% endif %}>55-64
+						</label>
+					</div>
+					<div class="radio">
+						<label> <input type="radio" name="ageRadio" id="ageRadio6"
+							value="65+" {% if ageRadio == "65+" %}checked{% endif %}>65+
+						</label>
+					</div>
+				</td>
+				<td class="col-xs-4"></td>
+
+			</tr>
+		</table>
+	</div>
+
+
+	<div class="col-xs-12 instructions-section">
+
+		<table class="col-xs-12">
+			<tr>
+				<td class="col-xs-9 instructions-section-text">
+
+					<h4>What is the highest level of education you have completed?</h4>
+
+					<div class="radio">
+						<label> <input type="radio" name="educationRadio"
+							id="educationRadio1" value="None" {% if educationRadio == "None" %}checked{% endif %}>None
+						</label>
+					</div>
+					<div class="radio">
+						<label> <input type="radio" name="educationRadio"
+							id="educationRadio2" value="Primary" {% if educationRadio == "Primary" %}checked{% endif %}>Primary
+							School
+						</label>
+					</div>
+					<div class="radio">
+						<label> <input type="radio" name="educationRadio"
+							id="educationRadio3" value="Middle" {% if educationRadio == "Middle" %}checked{% endif %}>Middle
+							School
+						</label>
+					</div>
+					<div class="radio">
+						<label> <input type="radio" name="educationRadio"
+							id="educationRadio4" value="High" {% if educationRadio == "High" %}checked{% endif %}>High
+							School
+						</label>
+					</div>
+					<div class="radio">
+						<label> <input type="radio" name="educationRadio"
+							id="educationRadio5" value="University" {% if educationRadio == "University" %}checked{% endif %}>University
+						</label>
+					</div>
+
+
+				</td>
+			</tr>
+		</table>
+
+
+	</div>
+
+
+
+	<div class="col-xs-12 instructions-section">
+
+		<table class="col-xs-12">
+			<tr>
+				<td class="col-xs-9 instructions-section-text">
+
+					<h4>What is your country of residence?</h4>
+
+					<div class="form-group">
+						<div class="col-xs-6">
+							<input type="text" id="id_residence" name="residence"
+								class="form-control" placeholder="Country of residence" {% if residence %}value="{{ residence | safe}}"{% endif %}> 
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+
+
+	</div>
+	
+	
+	
+	
+	<div class="col-xs-12 instructions-section">
+        <table class="col-xs-12">
+
+            <tr>
+                <td class="col-xs-6">
+                    <h4>Do you own a car?</h4>
+
+                    <div class="radio">
+                        <label> <input type="radio" name="carRadio" id="carRadio1"
+                            value="Yes" {% if carRadio == "Yes" %}checked{% endif %}>Yes
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label> <input type="radio" name="carRadio" id="carRadio2"
+                            value="No" {% if carRadio == "No" %}checked{% endif %}>No
+                        </label>
+                    </div>
+                    
+                </td>
+                <td class="col-xs-4"></td>
+
+            </tr>
+        </table>
+    </div>
+
+
+    
+    <div class="col-xs-12 instructions-section">
+        <table class="col-xs-12">
+
+            <tr>
+                <td class="col-xs-6">
+                    <h4>Have you ever used a hybrid or electric car?</h4>
+
+                    <div class="radio">
+                        <label> <input type="radio" name="evRadio" id="evRadio1"
+                            value="Yes" {% if evRadio == "Yes" %}checked{% endif %}>Yes
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label> <input type="radio" name="evRadio" id="evRadio2"
+                            value="No" {% if evRadio == "No" %}checked{% endif %}>No
+                        </label>
+                    </div>
+                    
+                </td>
+                <td class="col-xs-4"></td>
+
+            </tr>
+        </table>
+    </div>
+
+
+    <div class="col-xs-12 instructions-section">
+
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-9 instructions-section-text">
+
+                    <h4>Briefly describe the strategy you used in this game.</h4>
+
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <textarea id="id_strategy" name="strategy"
+                                class="form-control" rows="5"  >{% if strategy %}{{ strategy | safe}}{% endif %}</textarea>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    
+        <div class="col-xs-12 instructions-section">
+
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-9 instructions-section-text">
+
+                    <h4>Did you change your strategy during the game? If so, briefly describe how you changed it.</h4>
+
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <textarea id="id_strategy_change" name="strategy_change"
+                                class="form-control" rows="5" >{% if strategy_change %}{{ strategy_change | safe}}{% endif %}</textarea>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    
+        <div class="col-xs-12 instructions-section">
+
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-9 instructions-section-text">
+
+                    <h4>Do you have any comments about the game (for example, things you liked or disliked)?</h4>
+
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <textarea id="id_comments" name="comments"
+                                class="form-control" rows="5" >{% if comments %}{{ comments | safe}}{% endif %}</textarea>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+
+	<div class="col-xs-12 instructions-section">
+		<table class="col-xs-12">
+			<tr>
+
+				<td class="col-xs-3 instructions-section-text">
+					<button class="btn btn-default btn-primary btn-block" type="submit">Submit</button></td>
+						
+
+				<td class="col-xs-9 instructions-section-text"></td>
+			</tr>
+			
+		</table>
+	</div>
+
+
+
+
+
+	<div class="col-xs-12 instructions-section">
+		<table class="col-xs-12">
+			<tr>
+
+				<td id="input_missing" class="col-xs-6 instructions-section-text">
+				
+				{% if input_error %}
+					<div class="col-xs-12 error-message" name="input_missing_error"
+						style="margin-top: 10px;">
+						<div class="alert alert-danger" role="alert">Please answer all questions.</div>
+					</div>
+				{% endif %}
+				</td>
+			</tr>
+
+		</table>
+	</div>
+</form>
+
+
+{% endblock %}
+
+{% block footer %}
+<div id="footer">
+	<div class="container">
+		<div class="col-xs-12" style="margin-top: 20px;">
+			<div class="col-xs-6">
+				<a href="#" target="blank">&copy; EV Game</a>
+			</div>
+			<div class="col-xs-6" style="text-align: right;">
+				<a href="#">Leave Feedback</a>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block scripts %}{{ block.super }}
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        {% if anchor %}
+          $('html,body').animate({scrollTop: $("#{{ anchor }}").offset().top},1);
+        {% endif  %}
+    });
+</script>
+
+{% endblock %}
+
+

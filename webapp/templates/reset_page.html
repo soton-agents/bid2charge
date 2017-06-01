@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}EV Game - Reset{% endblock %}
+
+{% block content %}
+<div class="col-xs-12" id="game-body">
+	<p>Congratulations, you have completed another month. Your score for this month is <b>{{ monthly_score }}$.</b></p>
+	<p style="margin-top: 20px;">Your balance will now be reset to the initial balance you had ({{ user.treatment.user_initial_balance }}$).</p>
+	<p style="margin-top: 20px;">Your highest balance so far is {{ user.best_monthly_score }}$. This will still be used for your ranking and will be updated whenever you exceed it at the of a month!</p>
+	<p style="margin-top: 20px;">Click the <b>Reset</b> button to proceed and continue playing.</p>
+
+	
+	<button class="btn btn-default btn-primary" style="margin-top: 20px;" type="submit" id="continue-btn">Continue Playing</button>
+</div> 
+{% endblock %}
+
+{% block scripts %}{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#continue-btn").click(function(){
+		window.location.href = "/webapp/home/";
+	});
+});
+</script>
+{% endblock %}

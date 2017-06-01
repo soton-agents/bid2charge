@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}EV Game - Dashboard{% endblock %}
+
+{% block dashboard_active %}class="active"{% endblock %}
+
+{% block content %}
+<div class="col-xs-12" id="game-body">
+	<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 left-sided-element">
+		<!-- Section Title -->
+		<div class="col-xs-12">
+			<div class="col-xs-3 col-sm-4" style="margin-top: 13px;">
+				<img class="img-responsive" src="{% static 'webapp/img/line-divider.gif' %}" alt="Line Divider" style="width: 150px; height: 5px;">
+			</div>
+			<div class="col-xs-6 col-sm-4" style="white-space: nowrap;">
+				<span class="header-text">Task Selection
+					<sup>
+						<a  class="helper-icon"
+							data-toggle="popover" 
+							data-placement="bottom"							
+							data-content="	<div class='helper'>
+												<p>Choose one of the task sets below.</p>
+												<p>These are the optimal sets of tasks<p>
+												<p>that you can perform, considering the</p>
+												<p>amount of energy available, the</p>
+												<p>distance between tasks and the total</p>
+												<p>reward.</p>
+									</div>">
+							<span class="fa fa-question-circle"></span>
+						</a>
+					</sup>
+				</span>
+			</div>
+			<div class="col-xs-3 col-sm-4" style="margin-top: 13px;">
+				<img class="img-responsive" src="{% static 'webapp/img/line-divider.gif' %}" alt="Line Divider" style="width: 150px; height: 5px;">
+			</div>
+		</div><!-- Section Title -->
+
+		<div class="col-xs-12" style="margin-top: 20px;">
+			<p>You can perform any of the following sets of tasks. Choose the option that best suits your needs:</p>
+		</div>
+
+		<div class="col-xs-12">
+			{% if optimalTaskSets|length == 0 %}
+				<br/>
+				<span style="font-weight: bold; font-size: 14px;">There are no tasks available today.</span>
+			{% elif optimalTaskSets|length == 1 %}
+				<br/>
+				<span style="font-weight: bold; font-size: 14px;">You do not have enough energy for performing any tasks.</span>
+			{% else %}
+				<table class="table table-condensed table-responsive table-hover" id="taskSet-options">
+					<thead> 
+						<tr>
+							<th>Active</th>
+							<th>Task Set #</th>
+							<th>Total Reward</th>
+							<th>Energy Needed</th>
+						</tr>
+					</thead>
+					<tbody>
+					{% for taskSet in optimalTaskSets %}
+						{% if taskSet.1 == 0 and taskSet.2 == 0 %}
+							<tr id="x" class="option-row">
+								<td><input type="radio" name="active_task_set" id="radio-x"/></td>
+								<td colspan="3">Do not perform any tasks today</td>
+							</tr>
+						{% else %}
+							<tr id="{{ forloop.counter }}" class="option-row">
+								<td><input type="radio" name="active_task_set" id="radio-{{ forloop.counter }}" class="option-radio"/></td>
+								<!-- <td><span class="label label-success">{{ taskSet.0 }}</span></td> -->
+								<td>
+									{% for task_icon_path in taskSet.4 %}
+									<img src="{{ task_icon_path }}" alt="Task Icon" style="width: 30px;">
+									{% endfor %}
+								</td>
+								<td>$ {{ taskSet.1|floatformat:2 }}</td> <!-- Total Reward -->
+								<td>{{ taskSet.3|floatformat:2 }} kWh</td> <!-- Total Cost -->
+							</tr>
+						{% endif %}
+					{% endfor %}
+					</tbody>
+				</table>
+			{% endif %}
+		</div>
+	</div>
+
+	<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 pull-right" id="task-planning-section">
+		<div class="col-xs-12">
+			<div class="col-xs-3 col-sm-4" style="margin-top: 13px;">
+				<img class="img-responsive" src="{% static 'webapp/img/line-divider.gif' %}" alt="Line Divider" style="width: 150px; height: 5px;">
+			</div>
+			<div class="col-xs-6 col-sm-4" style="white-space: nowrap;">
+				<span class="header-text">Task Planning
+					<sup>
+						<a  class="helper-icon"
+							data-toggle="popover" 
+							data-placement="bottom"							
+							data-content="	<div class='helper'>
+												<p>This view shows the available tasks</p>
+												<p>for today. You might not be able to</p>
+												<p>perform all of them if you do not have</p>
+												<p>the energy required to cover the total</p>
+												<p>distance.</p>
+									</div>">
+							<span class="fa fa-question-circle"></span>
+						</a>
+					</sup>
+				</span>
+			</div>
+			<div class="col-xs-3 col-sm-4" style="margin-top: 13px;">
+				<img class="img-responsive" src="{% static 'webapp/img/line-divider.gif' %}" alt="Line Divider" style="width: 150px; height: 5px;">
+			</div>
+		</div>
+
+		<!-- Task Environemt -->
+		<div class="visible-sm col-sm-2 hidden-lg"></div>
+		<div id ="task_perform_env" class="col-xs-12 col-sm-8 col-md-12 col-lg-12 bordered-canvas"></div>
+		<div class="visible-sm col-sm-2 hidden-lg"></div>
+
+		<!-- Task Results -->
+		<div id="task_results" class="col-xs-12" style="margin-top: 15px; margin-left: -25px;">
+			<div class="col-xs-7 col-md-7">
+
+				<!-- Label -->
+				<div class="col-xs-12 centered" style="margin-top: -10px; margin-bottom: 10px;">
+					<span style="font-size: 15px; font-weight: bold;">After Delivering Items:</span>
+				</div>
+
+				<!-- Predicted Balance -->
+				<div class="col-xs-6" style="color: green;">
+					<div class="col-xs-12 centered"><span class="fa fa-dollar fa-3x"></span></div>
+					<div class="col-xs-12 centered scenario-info"><b><span>$ </span><span id="predicted-balance">{{ user.balance }}</span></b></div>
+				</div>
+
+				<!-- Predicted Battery -->
+				<div class="col-xs-6" style="color: orange;">
+					<div class="col-xs-12 centered"><span class="fa fa-bolt fa-3x"></span></div>
+					<div class="col-xs-12 centered scenario-info"><b><span id="predicted-energy">{{ user.energy_units }}</span><span>kWh</span></b></div>
+				</div>		
+			</div>	
+
+			<div class="col-xs-5 col-md-5" style="margin-left: 40px; margin-right: -40px;">
+				<button id="next-day-btn" class="btn btn-default btn-block btn-success disabled">
+					<span id="next-day-btn-text">
+						<span class='fa fa-car fa-3x'></span><br/>Perform Tasks<span>
+					</span>
+				</button>
+			</div>
+		</div><!--Task Results End -->
+	</div>
+</div>
+
+<input type="hidden" id="refreshed" value="no">
+<script type="text/javascript">
+onload=function(){
+var e=document.getElementById("refreshed");
+if(e.value=="no")e.value="yes";
+else{e.value="no";location.reload();}
+}
+</script>
+
+{% endblock %}
+
+{% block scripts %}{{ block.super }}
+<script src="{% static 'webapp/js/task_array.js' %}"></script>
+<script src="{% static 'webapp/js/tasks_environment.js' %}"></script>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		if ({{ optimalTaskSets|length }} <= 1){
+			$("#next-day-btn-text").html("<span class='fa fa-arrow-right fa-3x'></span><br/>Next Day");
+			$("#next-day-btn").removeClass("disabled");
+		}
+
+		$("#auction-result-battery-slider").slider({
+			orientation: "vertical",
+			range: "min",
+			min: 0,
+			max: {{ user.treatment.battery_capacity }},
+			value: {{ user.energy_units }},
+			slide: function(event, ui){ return false; }
+		});
+
+		var battery_percentage = parseFloat({{ user.energy_units }} * 100 / {{ user.treatment.battery_capacity }}).toFixed(2);
+		var infoback = "<div>" + battery_percentage + "%</div>";
+		$("#auction-result-battery-slider-parent .ui-slider-range").prepend(infoback);
+
+		$("#next-day-btn").click(function(){
+			taskSets = {{ optimalTaskSetsJS|safe }};
+
+			id = $("input[name=active_task_set]:checked").parent().parent().attr("id");
+			if (id == "x") id = taskSets.length;
+
+			var	gainedReward = 0;
+			var	consumedEnergy = 0;
+			var	otherOptions = "";
+
+			if (id){
+				gainedReward = taskSets[parseInt(id) - 1][1];
+				consumedEnergy = taskSets[parseInt(id) - 1][3];
+
+
+				otherOptions = "[";
+				for (var i = 0; i < taskSets.length - 1; i++){
+					if ((i + 1) != id){
+						otherOptions += "{reward:" + parseFloat(taskSets[parseInt(i)][1]).toFixed(2) + ", energy:" + parseFloat(taskSets[parseInt(i)][3]).toFixed(2) + "},"
+					}
+				}
+				
+				if (otherOptions[otherOptions.length - 1] == ",") 
+					otherOptions = otherOptions.substring(0, otherOptions.length - 1) + "]";
+				else
+					otherOptions += "]";
+			}
+
+			$.ajax({
+				type: "POST",
+				url: "/webapp/updateUserToNextDay/",
+				data: {"gainedReward": gainedReward.toFixed(2), "consumedEnergy": consumedEnergy.toFixed(2), "otherOptions": otherOptions},
+				success: function(destination){
+					window.location.href = "/webapp/" + destination;
+				}
+			});
+		});
+
+		draw_task_perform_environment("task_perform_env", {{ optimalTaskSetsJS|safe }});
+		$(window).trigger('resize');
+	});
+</script>
+{% endblock %}

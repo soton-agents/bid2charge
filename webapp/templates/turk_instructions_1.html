@@ -1,0 +1,859 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}EV Game - Instructions{% endblock %}
+
+{% block instructions_active %}class="active"{% endblock %}
+
+{% block control_panel %}{% endblock %}
+
+{% block content %}
+
+{% if request.user.is_aamas %}
+
+ <div class="col-xs-12 first-instructions-section">
+        <table class="col-xs-12">
+            <tr>
+            <td
+					class="col-xs-12 col-sm-9 col-md-9 col-lg-9 instructions-section-text">
+					<div class="alert alert-success" role="alert">
+						<h2>Bid2Charge Control Panel</h2>
+						<p>Below is the initial instruction
+							screen as a worker from Amazon Mechanical Turk would have
+							seen it. You can follow the instructions from here and play through the entire game.
+							</p>
+							<p>If you wish to skip the quiz (to start playing), change the interface, switch experiment or reset the game, 
+							use one of the buttons below.</p>
+							<br/>
+							<p>
+							<a href="/webapp/skipQuiz"><button type="button" class="btn btn-primary">Skip Quiz</button></a>
+							<a href="/webapp/changeMechanism"><button type="button" class="btn btn-primary">Change Mechanism</button></a>
+							<a href="/webapp/changeExperiment"><button type="button" class="btn btn-primary">Change Experiment</button></a>
+							<a href="/webapp/resetGame"><button type="button" class="btn btn-danger">Reset Game</button></a>
+							</p>
+							<br/>
+							
+							<p>
+							{% if request.user.treatment.treatment_name == "Uniform" %}
+							<p>Current Mechanism: SMV</p>
+							<p>Current Experiment: First</p>
+							{% elif request.user.treatment.treatment_name == "Expressive" %}
+							<p>Current Mechanism: Fully Expressive</p>
+							<p>Current Experiment: First</p>
+							{% elif request.user.treatment.treatment_name == "Simple" %}
+							<p>Current Mechanism: FINITE(1,2,4)</p>
+							<p>Current Experiment: First</p>
+							{% elif request.user.treatment.treatment_name == "Uniform_AAAI" %}
+							<p>Current Mechanism: SMV</p>
+							<p>Current Experiment: Second</p>
+							{% elif request.user.treatment.treatment_name == "Expressive_AAAI" %}
+							<p>Current Mechanism: Fully Expressive</p>
+							<p>Current Experiment: Second</p>
+							{% elif request.user.treatment.treatment_name == "Simple_AAAI" %}
+							<p>Current Mechanism: FINITE(1,2,4)</p>
+							<p>Current Experiment: Second</p>
+							{% else %}
+							<p>Current Mechanism: FINITE(1,2,3)</p>
+							<p>Current Experiment: Second</p>
+							{% endif %}
+							</p>
+					</div></td>
+					
+					                <td
+                    class="hidden-xs col-sm-3 col-md-3 col-lg-3 instructions-section-image">
+                            
+                </td>
+			</tr>
+		</table>
+	</div>
+	
+{% endif %}
+
+{% block rules_start %}
+<form class="form-horizontal" role="form" method="POST" action="#">
+
+
+
+    {% csrf_token %}
+    
+    
+    
+    
+
+    <!-- left section with fa icons -->
+    <div class="col-xs-12 first-instructions-section">
+    
+    
+        <h2 class="col-xs-12 instructions-section-title-left">Welcome</h2>
+
+        <table class="col-xs-12">
+        
+        	<tr>
+				<td
+                    class="col-xs-12 col-sm-9 col-md-9 col-lg-9 instructions-section-text">
+                    <p>
+                        Thanks for accepting this HIT. Please read the following rules and
+                        consent information about our research carefully. To ensure you
+                        are ready for this HIT, we will test your <i>basic</i>
+                        understanding of these rules in a short quiz at the end of this
+                        page.
+                    </p>
+                    <p>
+                        When you have completed the HIT, you will need to enter the following unique confirmation code on the Mechanical Turk website to claim your payment:
+                        <b>{{ request.user.username }}</b> 
+                    </p>
+                    <p>
+                        You can return to these instructions at any point during the game by clicking the "Instructions" button. 
+                    </p>
+                </td>
+                <td
+                    class="hidden-xs col-sm-3 col-md-3 col-lg-3 instructions-section-image">
+                    <span style="color: brown;" class="fa fa-plug fa-5x"></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}
+
+    <!-- Left section -->
+    <div class="col-xs-12 instructions-section">
+        <h2 class="col-xs-12 instructions-section-title-left">Summary</h2>
+
+        <table class="col-xs-12">
+            <tr>
+                <td
+                    class="col-xs-12 col-sm-9 col-md-9 col-lg-9 instructions-section-text">
+                    <p>In this game, you take on the role of an electric delivery
+                        van driver.   
+                        Every day, you can
+                        earn virtual money by completing delivery tasks. However,
+                        completing deliveries will drain your van’s battery.</p>
+                    <p>You can re-charge the battery by participating in a daily
+                        electricity auction. The more virtual money you bid on this
+                        auction, the more electricity you are likely to receive, but the
+                        more you may end up paying for it.</p>
+                    </p>
+                    
+                    
+                    
+                    {% if request.user.is_turker_trial_2  %}
+                    <p>
+                           In total, you will play this game 3 times, with each game consisting of 10 days. 
+                           <b>Your aim is to maximise your overall accumulated profit over all
+                            games.</b> This is the difference between the money you earn
+                        from deliveries and the money you spend in the daily auctions. <i>Note: your battery is reset after each game, and the possible tasks (see below) are identical in each of the games.</i>  
+                    </p>
+                    {% else %}
+                    <p>
+                        <b>Your aim is to maximise your overall profit over {{ request.user.treatment.numberOfDays }}
+                            simulated days.</b> This is the difference between the money you earn
+                        from deliveries and the money you spend in the daily auctions.
+                    </p>
+                    {% endif %}
+                    
+                    
+                    {% if request.user.is_turker %}
+                    <p>
+                        <b>HIT Bonus:</b> You will start with a virtual budget of $100. At
+                        the end of the game, we will pay you a bonus of ${{ bonus_per_profit }} for every <i>additional</i>
+                        virtual $1.00 of profit you made during the game (up to a bonus of
+                        ${{ max_bonus }}). So if you end the game with a virtual balance of $150, we
+                        will pay you a bonus of ${{ bonus_example }} (in addition to the ${{ base_payment }}
+                        participation fee).
+                    </p>
+                    {% endif %}
+                </td>
+                <td
+                    class="hidden-xs col-sm-3 col-md-3 col-lg-3 instructions-section-image">
+                    <div class="col-sm-5">
+                        <img class="img-responsive"
+                            src="{% static 'webapp/img/high-reward-task-icon.png' %}"
+                            alt="Task Image">
+                    </div>
+                    <div class="col-sm-7">
+                        <span style="color: orange;" class="fa fa-truck fa-5x"></span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+    <!-- Left section -->
+    <div class="col-xs-12 instructions-section">
+        <h2 class="col-xs-12 instructions-section-title-left">How to Play</h2>
+
+        <table class="col-xs-12">
+            <tr>
+                
+                {% if request.user.is_turker_trial_2  %}
+                
+                <td class="col-xs-9 instructions-section-text">
+                    <p>At the top of the screen, you can see how much virtual money
+                        you currently have, what day it is (out of 10) and which game (out of 3), and the state of
+                        charge of your battery (in % and kilowatt hours, kWh):</p> </br>
+                    <div class="col-xs-12">
+                        <img class="img-responsive"
+                            src="{% static 'webapp/img/instructions/status_2.png' %}"
+                            alt="Header Image">
+                    </div>
+                </td>
+                
+                {% else %}
+                
+                <td class="col-xs-9 instructions-section-text">
+                    <p>At the top of the screen, you can see how much virtual money
+                        you currently have, what day it is (out of {{ request.user.treatment.numberOfDays }}), and the state of
+                        charge of your battery (in % and kilowatt hours, kWh):</p> </br>
+                    <div class="col-xs-12">
+                        <img class="img-responsive"
+                            src="{% static 'webapp/img/instructions/status.png' %}"
+                            alt="Header Image">
+                    </div>
+                </td>
+                
+                
+                {% endif %}
+                
+                
+                <td class="col-xs-3 instructions-section-text"></td>
+
+            </tr>
+        </table>
+    </div>
+
+
+
+    <!-- Left section -->
+    <div class="col-xs-12 instructions-section">
+
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-9 instructions-section-text">
+                    <p>The game proceeds in three steps that are repeated every
+                        day:
+                    <ol>
+                        <li>Planning</li>
+                        <li>Auction</li>
+                        <li>Deliveries</li>
+                    </ol>
+
+                    </p></td>
+
+            </tr>
+        </table>
+    </div>
+
+
+    <!-- Left section -->
+    <div class="col-xs-12 instructions-section">
+        <h3 class="col-xs-12 instructions-section-title-left">Step 1:
+            Planning</h3>
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-9 instructions-section-text">
+                    <p>
+                        To help you decide how much you need to charge your battery for
+                        the current day, the "Possible Tasks" view shows you the delivery
+                        tasks that <b>might</b> come up today:
+                    </p>
+                </td>
+                <td class="col-xs-3 instructions-section-text"></td>
+            </tr>
+        </table>
+    </div>
+    <!-- Left section -->
+    <div class="col-xs-12 instructions-section">
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-6 instructions-section-text">
+                    <div class="col-xs-12">
+                        <img class="img-responsive"
+                            src="{% static 'webapp/img/instructions/planning.png' %}"
+                            alt="Header Image">
+                    </div>
+                </td>
+                <td class="col-xs-6 instructions-section-text"></td>
+            </tr>
+        </table>
+    </div>
+
+
+    <!-- Left section -->
+    <div class="col-xs-12 instructions-section">
+
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-9 instructions-section-text">
+                    <p>
+                        Each task has a value in $ that you will earn if you complete it.
+                        However, there is <b>uncertainty</b> about which tasks will
+                        actually come up today, and the probability of a task becoming
+                        available is shown underneath it.
+                    </p>
+
+                    <p>Furthermore, completing tasks will drain your battery. To
+                        find out exactly how much battery will be drained, you can select
+                        one or more tasks on this view:</p>
+                </td>
+                <td class="col-xs-3 instructions-section-text"></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Left section -->
+    <div class="col-xs-12 instructions-section">
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-6 instructions-section-text">
+                    <div class="col-xs-12">
+                        <img class="img-responsive"
+                            src="{% static 'webapp/img/instructions/planning_selection.png' %}"
+                            alt="Header Image">
+                    </div>
+                </td>
+                <td class="col-xs-6 instructions-section-text"></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Left section -->
+    <div class="col-xs-12 instructions-section">
+
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-9 instructions-section-text">
+                    <p>Here, selecting all three tasks tells you that if you manage to complete all of them, you will gain a  
+                    reward of $30.00 and will drain 15 kWh from your battery.</p>
+
+                    <p>
+                        <b>Note: Interacting with the "Possible Tasks" view does not
+                            directly affect the game.</b> It only provides you with additional
+                        information you may use in the next step.
+                    </p>
+                </td>
+                <td class="col-xs-3 instructions-section-text"></td>
+            </tr>
+        </table>
+    </div>
+
+{% if user.treatment.bidding_strategy == "progressive_bidding" %}
+
+    <!-- Left section -->
+    <div class="col-xs-12 instructions-section">
+        <h3 class="col-xs-12 instructions-section-title-left">Step 2:
+            Auction</h3>
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-9 instructions-section-text">
+                    <p>
+                        You may now participate in an <b>auction</b> to recharge your
+                        battery. To do so, you formulate a set of bids, <b>each of
+                            which expresses the maximum you are willing to pay for a given
+                            level of charge.</b>
+                    </p>
+                </td>
+                <td class="col-xs-3 instructions-section-text"></td>
+            </tr>
+        </table>
+    </div>
+
+
+    <!-- Left section -->
+    <div class="col-xs-12 instructions-section">
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-6 instructions-section-text">
+                    <div class="col-xs-12">
+                        <img class="img-responsive"
+                            src="{% static 'webapp/img/instructions/auction_expressive.png' %}"
+                            alt="Header Image">
+                    </div>
+                </td>
+                <td class="col-xs-6 instructions-section-text"></td>
+            </tr>
+        </table>
+    </div>
+
+
+
+    <!-- Left section -->
+    <div class="col-xs-12 instructions-section">
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-9 instructions-section-text">
+                    <p>
+                        In the example above, you are indicating that you would pay up to
+                        $5.00 in total for receiving 3 kWh, $10.00 for 4 kWh and $15 for 7
+                        kWh. These are for the <b>exact quantities</b> you specify, so,
+                        for example, in this case, you would never win 1 or 2 kWh. You may
+                        add as many bids as you like (up to the capacity of your battery).
+                    </p>
+
+                    <p>
+                        <b>Optional note for interested players:</b><i> You are
+                            competing against simulated bidders. Also, the game uses a
+                            certain type of auction (similar to a second-price auction),
+                            where the price you will pay does not directly depend on your
+                            bids. This means you will typically pay less than what you bid,
+                            and <b>you will perform best by bidding exactly what you
+                                believe the electricity is worth to you.</b> </i>
+                    </p>
+
+
+                    <p>When you are ready, press "Run Auction" and you will
+                        find out how many units you won and for what price. You can also
+                        skip the auction if you like.</p>
+                </td>
+                <td class="col-xs-3 instructions-section-text"></td>
+            </tr>
+        </table>
+    </div>
+
+{% elif user.treatment.bidding_strategy == "uniform_bidding" %}
+
+    <!-- Left section -->
+    <div class="col-xs-12 instructions-section">
+        <h3 class="col-xs-12 instructions-section-title-left">Step 2:
+            Auction</h3>
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-9 instructions-section-text">
+                    <p>
+                        You may now participate in an <b>auction</b> to recharge your
+                        battery. To do so, you formulate a bid which includes a <b>maximum number of
+                        kWh units</b> you wish to obtain, as well as a <b>maximum price you are willing to pay per unit</b>.
+                    </p>
+                </td>
+                <td class="col-xs-3 instructions-section-text"></td>
+            </tr>
+        </table>
+    </div>
+
+
+    <!-- Left section -->
+    <div class="col-xs-12 instructions-section">
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-6 instructions-section-text">
+                    <div class="col-xs-12">
+                        <img class="img-responsive"
+                            src="{% static 'webapp/img/instructions/auction_uniform.png' %}"
+                            alt="Header Image">
+                    </div>
+                </td>
+                <td class="col-xs-6 instructions-section-text"></td>
+            </tr>
+        </table>
+    </div>
+
+
+
+    <!-- Left section -->
+    <div class="col-xs-12 instructions-section">
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-9 instructions-section-text">
+                    <p>
+                        In the example above, you are indicating that you
+                        wish to obtain up to 4 kWh and that you are willing to pay up to $1.50
+                        for each kWh you receive.
+                    </p>
+
+                    <p>
+                        <b>Optional note for interested players:</b><i> You are
+                            competing against simulated bidders. Also, the game uses a
+                            certain type of auction (similar to a second-price auction),
+                            where the price you will pay does not directly depend on your
+                            bid. This means you will typically pay less than what you bid,
+                            and <b>you will perform best by bidding close to what you
+                                believe the electricity is worth to you.</b> </i>
+                    </p>
+
+
+                    <p>When you are ready, press "Run Auction" and you will
+                        find out how many units you won and for what price. You can also
+                        skip the auction if you like.</p>
+                </td>
+                <td class="col-xs-3 instructions-section-text"></td>
+            </tr>
+        </table>
+    </div>
+
+
+{% elif user.treatment.bidding_strategy == "simple_bidding" %}
+
+
+    <!-- Left section -->
+    <div class="col-xs-12 instructions-section">
+        <h3 class="col-xs-12 instructions-section-title-left">Step 2:
+            Auction</h3>
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-9 instructions-section-text">
+                    <p>
+                        You may now participate in an <b>auction</b> to recharge your
+                        battery. To do so, you select <b>an appropriate bid that best 
+                        represents the maximum you are willing to pay per kWh of
+                        electricity</b>.
+                    </p>
+                </td>
+                <td class="col-xs-3 instructions-section-text"></td>
+            </tr>
+        </table>
+    </div>
+
+
+    <!-- Left section -->
+    <div class="col-xs-12 instructions-section">
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-6 instructions-section-text">
+                    <div class="col-xs-12">
+                    {% if user.treatment.treatment_name == "Simple_AAAI_3" %}
+                    
+                        <img class="img-responsive"
+                            src="{% static 'webapp/img/instructions/auction_simple_3.png' %}"
+                            alt="Header Image">
+                    {% else %}
+                    
+                    <img class="img-responsive"
+                            src="{% static 'webapp/img/instructions/auction_simple.png' %}"
+                            alt="Header Image">
+                    
+                    {% endif %}
+                    </div>
+                </td>
+                <td class="col-xs-6 instructions-section-text"></td>
+            </tr>
+        </table>
+    </div>
+
+
+
+    <!-- Left section -->
+    <div class="col-xs-12 instructions-section">
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-9 instructions-section-text">
+                {% if user.treatment.treatment_name == "Simple_AAAI_3" %}
+                <p>
+                        In the example above, you have three possible bids - $1.00, $2.00 or $3.00
+                        per kWh of electricity.
+                    </p>
+                {% else %}
+                    <p>
+                        In the example above, you have three possible bids - $1.00, $2.00 or $4.00
+                        per kWh of electricity.
+                    </p>
+                 {% endif %}
+
+                    <p>
+                        <b>Optional note for interested players:</b><i> You are
+                            competing against simulated bidders. Also, the game uses a
+                            certain type of auction (similar to a second-price auction),
+                            where the price you will pay does not directly depend on your
+                            bids. This means you will typically pay less than what you bid,
+                            and <b>you will perform best by bidding close to what you
+                                believe the electricity is worth to you.</b> </i>
+                    </p>
+
+
+                    <p>When you have selected a bid, press "Run Auction" and you will
+                        find out how many units you won and for what price. Alternatively, you can also
+                        skip the auction if you like.</p>
+                </td>
+                <td class="col-xs-3 instructions-section-text"></td>
+            </tr>
+        </table>
+    </div>
+
+
+{% endif %}
+
+    <!-- Left section -->
+    <div class="col-xs-12 instructions-section">
+        <h3 class="col-xs-12 instructions-section-title-left">Step 3:
+            Deliveries</h3>
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-9 instructions-section-text">
+                    <p>In the final step, you find out which delivery tasks are
+                        available to you.</p>
+
+                    <p>You can now select which of these tasks you would like to
+                        complete. The interface will only show you sets that you can
+                        complete with your current charge, and it will remove any options
+                        where better alternatives exist (that offer a higher reward for less electricity).</p>
+
+                    <p>You may also decide not to complete any tasks, for example
+                        if you wish to preserve your battery charge for the following
+                        days.</p>
+                </td>
+                <td class="col-xs-3 instructions-section-text"></td>
+            </tr>
+        </table>
+    </div>
+
+
+
+
+    <!-- Left section -->
+    <div class="col-xs-12 instructions-section">
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-9 instructions-section-text">
+                    <div class="col-xs-12">
+                        <img class="img-responsive"
+                            src="{% static 'webapp/img/instructions/task_selection.png' %}"
+                            alt="Header Image">
+                    </div>
+                </td>
+                <td class="col-xs-3 instructions-section-text"></td>
+            </tr>
+        </table>
+    </div>
+
+{% block rules_end %}
+    <!-- Left section -->
+    <div class="col-xs-12 instructions-section">
+        <h2 class="col-xs-12 instructions-section-title-left">Research
+            Information and Consent</h2>
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-9 instructions-section-text">
+                    <p>This game is part of a research project run by 
+                       the School of Electronics and Computer Science at the University of Southampton in the United Kingdom.
+                        We are investigating new mechanisms for
+                        charging electric vehicles, where a potentially limited supply of
+                        electricity needs to be allocated efficiently to multiple electric
+                        vehicle owners.</p>
+
+                    <p>We will collect anonymous data about how you interact with
+                        the game to help our research. All data will be handled according
+                        to the UK Data Protection Act (DPA).  
+                        We use session cookies to
+                        enable us to track the state of the game, but we collect no data
+                        that will make you personally identifiable.</p>
+
+                    <p>
+                        This study has been approved by the University's ethics committee 
+                        (application ERGO/FPSE/12804). 
+                         You are free to leave the study at
+                        any point. If you have any questions or concerns, please contact
+                        the principal investigator: 
+                         Dr Sebastian Stein, School of
+                        Electronics and Computer Science, University of Southampton, SO17
+                        1BJ, UK, email <a href="mailto:ss2@ecs.soton.ac.uk">ss2@ecs.soton.ac.uk</a>.
+                       
+                    </p>
+                    <div class="form_group">
+                    <div class="checkbox">
+                        <label> <input type="checkbox" name="consent_check" {% if consent_given %}checked{% endif %}/> I have read the
+                            research information above and I give my consent to participating
+                            in this research project.</label>
+                    </div>
+                    </div>
+                </td>
+                <td class="col-xs-3 instructions-section-text"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="col-xs-12 instructions-section">
+        <h2 class="col-xs-12 instructions-section-title-left">Quiz</h2>
+        <table class="col-xs-12">
+
+            <tr>
+                <td class="col-xs-9 instructions-section-text">
+                    <p>So you can check your understanding of the rules, please
+                        answer the following questions:</p></td>
+            </tr>
+            <tr>
+                <td class="col-xs-9 instructions-section-text">
+
+                    <h4>What is the goal of the game?</h4>
+
+                    <div class="radio">
+                        <label> <input type="radio" name="goalRadio"
+                            id="goalRadio1" value="option1" {% if goalAnswer == "option1"%}checked{% endif %}> Complete as many tasks
+                            as possible. </label>
+                    </div>
+                    <div class="radio">
+                        <label> <input type="radio" name="goalRadio"
+                            id="goalRadio2" value="option2" {% if goalAnswer == "option2"%}checked{% endif %}> Achieve as high a profit
+                            as possible. </label>
+                    </div>
+                    <div class="radio">
+                        <label> <input type="radio" name="goalRadio"
+                            id="goalRadio3" value="option3" {% if goalAnswer == "option3"%}checked{% endif %}> Preserve your battery as
+                            much as possible. </label>
+                    </div>
+                    <div class="radio">
+                        <label> <input type="radio" name="goalRadio"
+                            id="goalRadio4" value="option4" {% if goalAnswer == "option4"%}checked{% endif %}> Use your battery as much
+                            as possible. </label>
+                    </div>
+                    <div class="radio">
+                        <label> <input type="radio" name="goalRadio"
+                            id="goalRadio5" value="option5" {% if goalAnswer == "option5"%}checked{% endif %}> Win as much electricity
+                            in the auctions as possible. </label>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <table class="col-xs-12">
+
+            <tr>
+                <td class="col-xs-6">
+                    <h4>Given the image on the right, what is the maximum reward
+                        you can achieve with a battery charge of 12kWh?</h4>
+
+                    <div class="radio">
+                        <label> <input type="radio" name="planRadio"
+                            id="planRadio1" value="option1" {% if planAnswer == "option1"%}checked{% endif %}>$5</label>
+                    </div>
+                    <div class="radio">
+                        <label> <input type="radio" name="planRadio"
+                            id="planRadio2" value="option2" {% if planAnswer == "option2"%}checked{% endif %}>$10</label>
+                    </div>
+                    <div class="radio">
+                        <label> <input type="radio" name="planRadio"
+                            id="planRadio3" value="option3" {% if planAnswer == "option3"%}checked{% endif %}>$15</label>
+                    </div>
+                    <div class="radio">
+                        <label> <input type="radio" name="planRadio"
+                            id="planRadio4" value="option4" {% if planAnswer == "option4"%}checked{% endif %}>$30</label>
+                    </div>
+                    <div class="radio">
+                        <label> <input type="radio" name="planRadio"
+                            id="planRadio5" value="option5" {% if planAnswer == "option5"%}checked{% endif %}>I would need to select a
+                            different combination of tasks to find out.</label>
+                    </div>
+                </td>
+                <td class="col-xs-4">
+                    <div class="col-xs-12">
+                        <img class="img-responsive"
+                            src="{% static 'webapp/img/instructions/planning_selection.png' %}"
+                            alt="Header Image">
+                    </div>
+                </td>
+
+            </tr>
+        </table>
+
+        <table class="col-xs-12">
+            <tr>
+                <td class="col-xs-9 instructions-section-text">
+
+                    <h4>The bids you place in the auction represent:</h4>
+
+                    <div class="radio">
+                        <label> <input type="radio" name="auctionRadio"
+                            id="auctionRadio1" value="option1" {% if auctionAnswer == "option1"%}checked{% endif %}> The exact amount I
+                            will pay if I win.</label>
+                    </div>
+                    <div class="radio">
+                        <label> <input type="radio" name="auctionRadio"
+                            id="auctionRadio2" value="option2" {% if auctionAnswer == "option2"%}checked{% endif %}> The minimum amount
+                            I will pay if I win. </label>
+                    </div>
+                    <div class="radio">
+                        <label> <input type="radio" name="auctionRadio"
+                            id="auctionRadio3" value="option3" {% if auctionAnswer == "option3"%}checked{% endif %}> The maximum amount
+                            I will pay if I win. </label>
+                    </div></td>
+            </tr>
+        </table>
+
+
+    </div>
+
+    <div class="col-xs-12 instructions-section">
+        <table class="col-xs-12">
+            <tr>
+
+                <td class="col-xs-3 instructions-section-text">
+                    <button class="btn btn-default btn-primary btn-block" type="submit">Submit
+                        Answers</button></td>
+                        
+
+                <td class="col-xs-9 instructions-section-text"></td>
+            </tr>
+            
+        </table>
+    </div>
+
+    <div class="col-xs-12 instructions-section">
+        <table class="col-xs-12">
+            <tr>
+
+                <td id="consent" class="col-xs-6 instructions-section-text">
+                
+                {% if consent_error %}
+                    <div class="col-xs-12 error-message" name="consent_error"
+                        style="margin-top: 10px;">
+                        <div class="alert alert-danger" role="alert">Please give
+                            your consent to participating in the research if you wish to
+                            continue.</div>
+                    </div>
+                    
+                {% endif %}
+                </td>
+            </tr>
+
+            <tr>
+
+                <td id="quiz" class="col-xs-6 instructions-section-text">
+                
+                {% if quiz_error %}
+                    <div class="col-xs-12 error-message" name="quiz_error"
+                        style="margin-top: 10px;">
+                        <div class="alert alert-danger" role="alert">Some of your answers are wrong or missing. Please try again.</div>
+                    </div> 
+                    
+                    {% endif %}
+                    </td>
+            </tr>
+
+        </table>
+    </div>
+
+
+
+</form>
+{% endblock %}
+
+{% endblock %}
+
+{% block footer %}
+<div id="footer">
+	<div class="container">
+		<div class="col-xs-12" style="margin-top: 20px;">
+			<div class="col-xs-6">
+				<a href="#" target="blank">&copy; EV Game</a>
+			</div>
+			{% if request.user.is_turker == False %}
+			<div class="col-xs-6" style="text-align: right;">
+				<a href="#">Leave Feedback</a>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block scripts %}{{ block.super }}
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		{% if anchor %}
+		  $('html,body').animate({scrollTop: $("#{{ anchor }}").offset().top},1);
+		{% endif  %}
+	});
+</script>
+
+{% endblock %}
+
+

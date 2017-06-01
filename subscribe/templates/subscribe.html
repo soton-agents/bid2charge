@@ -1,0 +1,39 @@
+{% extends "basic.html" %}
+
+{% load staticfiles %}
+
+{% block subscribe_active %}class="active"{% endblock %}
+
+{% block content %}
+
+<div class="col-xs-12 col-sm-8 col-md-6 col-lg-6 ">
+				<div class="formContainer">
+					<h3 style="text-align: center;">Bid to Charge</h3>
+
+					<p class="catchy-line">Play a game to help research on electric
+						vehicles</p>
+					
+
+					<p style="margin-top: 20px;">
+						<strong>Electric Vehicles (EVs)</strong> are key to combatting
+						climate change. However, our current electricity infrastructure
+						will struggle to accommodate large numbers of simultaneously
+						charging EVs.
+					</p>
+
+					<p>One way of addressing this is to use <b>auctions</b> to distribute
+						a limited supply of electricity to competing drivers.</p>
+
+					<p>To study this approach, we designed a game in which you take on the role of an EV delivery van driver.
+					As you play the game, you will anonymously contribute to our research.</p>
+
+					<!-- <p style="font-style: italic; margin-top: 20px;">Enter your
+						email address to receive a launch notification:</p>  -->
+						<br/>
+		<div style="text-align: center;">
+		<a href="/accounts/login/"><button  type="button" class="btn btn-primary btn-lg">Play Now</button></a>
+		</div>
+		
+</div>
+
+{% endblock %}
