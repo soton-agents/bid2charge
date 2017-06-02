@@ -1,4 +1,4 @@
-# BID2CHARGE SETUP INSTRUCTIONS
+# Bid2Charge Setup Instructions
 
 Follow these instructions to set up a development environment for running Bid2Charge on your local machine.
 
@@ -15,12 +15,15 @@ Follow the steps below for setting up your environment: 
  $ sudo pip install virtualenv
 ```
 
-2. Create a new directory for the code base and the virtual environment (e.g., ~/bid2charge). From within the new directory, create a virtual environement with the name env: 
+2. Create a new directory for the code base and the virtual environment (e.g., `~/bid2charge`). From within the new directory, create a virtual environement with the name env:
+```
 > $ virtualenv env
+```
 
-3. Create another folder for the code base, e.g., ev-charging-game. Copy the source code for the game into that directory.
+3. Create another folder for the code base, e.g., `ev-charging-game`. Copy the source code for the game into that directory.
 
-You should now have the following file structure: 
+You should now have the following file structure:
+```
 bid2charge/
 | - env/
 |   | - ...
@@ -30,11 +33,14 @@ bid2charge/
 |   | - db_scripts/ 
 |   | - manage.py
 |   | - ...
+```
 
-4. Add a username and password to the EVChargingGame/example_local_settings.py file and rename it to local_settings.py (other settings could be added here too). 
+4. Add a username and password to the `EVChargingGame/example_local_settings.py` file and rename it to `local_settings.py` (other settings could be added here too). 
 
-5. Install all the necessary python packages under your virtual environment. Change to the ev-charging-game folder (you should have a file called requirements.txt) and run the command below. The requirements file contains all the python packages required. Pip will try and install every one of them if they are not already installed. Also, since we're using the pip from our virtual environment, all the packages will be installed under the virtual environement. 
-> $ sudo ../env/bin/pip install -r requirements.txt
+5. Install all the necessary python packages under your virtual environment. Change to the `ev-charging-game` folder (you should have a file called `requirements.txt`) and run the command below. The requirements file contains all the python packages required. Pip will try and install every one of them if they are not already installed. Also, since we're using the pip from our virtual environment, all the packages will be installed under the virtual environement. 
+```
+$ sudo ../env/bin/pip install -r requirements.txt
+```
 
 6. Create an empty MySQL database named ev_game_db. You can do this using the MySQL command line tool, by following the steps below: 
 > $ mysql -u root -p -h localhost
