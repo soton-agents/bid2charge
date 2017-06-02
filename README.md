@@ -1,4 +1,4 @@
-BID2CHARGE SETUP INSTRUCTIONS
+# BID2CHARGE SETUP INSTRUCTIONS
 
 Follow these instructions to set up a development environment for running Bid2Charge on your local machine.
 
@@ -11,7 +11,9 @@ To begin with, please ensure you have the prerequisites below installed on your 
 Follow the steps below for setting up your environment: 
 
 1. Install virtualenv: 
-> $ sudo pip install virtualenv
+```
+ $ sudo pip install virtualenv
+```
 
 2. Create a new directory for the code base and the virtual environment (e.g., ~/bid2charge). From within the new directory, create a virtual environement with the name env: 
 > $ virtualenv env
